@@ -39,5 +39,8 @@ namespace EDTESP.Infrastructure.CC.Util
         public static string ListaFacilEmail => ConfigurationManager.AppSettings["ListaFacil"];
 
         public static string EditoraNacionalEmail => ConfigurationManager.AppSettings["EditoraNacionalEmail"];
+        public static string SendgridName => ConfigurationManager.AppSettings["SendgridName"];
+        public static string SendgridMail => ConfigurationManager.AppSettings["SendgridMail"];
+        public static string SendgridApiKey => ConfigurationManager.AppSettings["SendgridApiKey"];
     }
 }

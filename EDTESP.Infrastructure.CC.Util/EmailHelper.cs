@@ -53,45 +53,100 @@ namespace EDTESP.Infrastructure.CC.Util
             return msg;
         }
 
-        public static void SendEmail(Dictionary<string, string> to, string subject, string body, string[] attachments, Dictionary<string, string> bcc = null, int opcao = 0)
+        //public static void SendEmail(Dictionary<string, string> to, string subject, string body, string[] attachments, Dictionary<string, string> bcc = null, int opcao = 0)
+        //{
+        //    var smtp = MountClient(opcao);
+
+        //    var dataEmail = GetDataSmtp(opcao);
+
+        //    var msg = MountMessage(to, subject, body, bcc, EdtespConfig.SmtpUser);
+
+        //    if (attachments.Any())
+        //    {
+        //        foreach (var attach in attachments)
+        //        {
+        //            var att = new Attachment(attach);
+        //            msg.Attachments.Add(att);
+        //        }
+        //    }
+
+        //    smtp.Send(msg);
+        //}
+
+        //public static void SendEmail(Dictionary<string, string> to, string subject, string body, Dictionary<string, byte[]> attachments, Dictionary<string, string> bcc = null, string from = "", int opcao = 0)
+        //{
+        //    var smtp = MountClient(opcao);
+
+        //    var dataEmail = GetDataSmtp(opcao);
+
+        //    var msg = MountMessage(to, subject, body, bcc, dataEmail["userSmtp"].ToString());
+
+        //    if (attachments.Any())
+        //    {
+        //        foreach (var attach in attachments)
+        //        {
+        //            var stream = new MemoryStream(attach.Value);
+        //            var att = new Attachment(stream, attach.Key);
+        //            msg.Attachments.Add(att);
+        //        }
+        //    }
+
+        //    smtp.Send(msg);
+        //}
+
+        public static void SendGridEmail(Dictionary<string, string> to, string subject, string body, string[] attachments)
         {
-            var smtp = MountClient(opcao);
+            var client = new SendGrid.SendGridClient(EdtespConfig.SendgridApiKey);
+            var from = new SendGrid.Helpers.Mail.EmailAddress(EdtespConfig.SendgridMail, EdtespConfig.SendgridName);
 
-            var dataEmail = GetDataSmtp(opcao);
-
-            var msg = MountMessage(to, subject, body, bcc, dataEmail["userSmtp"].ToString());
+            var toUser = to.First();
+            var toMail = new SendGrid.Helpers.Mail.EmailAddress(toUser.Key, toUser.Value);
+            var msg = SendGrid.Helpers.Mail.MailHelper.CreateSingleEmail(from, toMail, subject, null, body);
 
             if (attachments.Any())
             {
                 foreach (var attach in attachments)
                 {
-                    var att = new Attachment(attach);
-                    msg.Attachments.Add(att);
+                    var fileName = Path.GetFileName(attach);
+                    var bytes = File.ReadAllBytes(attach);
+                    var base64 = Convert.ToBase64String(bytes);
+
+                    var att = new SendGrid.Helpers.Mail.Attachment();
+                    att.Content = base64;
+                    att.ContentId = Guid.NewGuid().ToString();
+                    att.Filename = fileName;
+                    msg.AddAttachment(att);
                 }
             }
 
-            smtp.Send(msg);
+            client.SendEmailAsync(msg).ConfigureAwait(false);
         }
 
-        public static void SendEmail(Dictionary<string, string> to, string subject, string body, Dictionary<string, byte[]> attachments, Dictionary<string, string> bcc = null, string from = "", int opcao = 0)
+        public static void SendGridEmail(Dictionary<string, string> to, string subject, string body, Dictionary<string, byte[]> attachments)
         {
-            var smtp = MountClient(opcao);
+            var client = new SendGrid.SendGridClient(EdtespConfig.SendgridApiKey);
+            var from = new SendGrid.Helpers.Mail.EmailAddress(EdtespConfig.SendgridMail, EdtespConfig.SendgridName);
 
-            var dataEmail = GetDataSmtp(opcao);
-
-            var msg = MountMessage(to, subject, body, bcc, dataEmail["userSmtp"].ToString());
+            var toUser = to.First();
+            var toMail = new SendGrid.Helpers.Mail.EmailAddress(toUser.Key, toUser.Value);
+            var msg = SendGrid.Helpers.Mail.MailHelper.CreateSingleEmail(from, toMail, subject, null, body);
 
             if (attachments.Any())
             {
                 foreach (var attach in attachments)
                 {
-                    var stream = new MemoryStream(attach.Value);
-                    var att = new Attachment(stream, attach.Key);
-                    msg.Attachments.Add(att);
+                    var fileName = Path.GetFileName(attach.Key);
+                    var base64 = Convert.ToBase64String(attach.Value);
+
+                    var att = new SendGrid.Helpers.Mail.Attachment();
+                    att.Content = base64;
+                    att.ContentId = Guid.NewGuid().ToString();
+                    att.Filename = fileName;
+                    msg.AddAttachment(att);
                 }
             }
 
-            smtp.Send(msg);
+            client.SendEmailAsync(msg).ConfigureAwait(false);
         }
 
         private static Dictionary<string, object> GetDataSmtp(int opcao)

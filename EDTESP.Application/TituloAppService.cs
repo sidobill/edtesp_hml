@@ -255,7 +255,8 @@ namespace EDTESP.Application
                 Empresa = emp.RazaoSocial
             });
 
-            EmailHelper.SendEmail(tos, sub, body, attchs, opcao: contr.EmpresaId);
+            EmailHelper.SendGridEmail(tos, sub, body, attchs);
+
             bols.ForEach(x =>
             {
                 x.EnviadoAoCliente = true;
@@ -296,7 +297,8 @@ namespace EDTESP.Application
                 Vencto = bol.DataVenctoReal.ToString("dd/MM/yyyy")
             });
 
-            EmailHelper.SendEmail(tos, sub, body, new[] { path }, opcao: bol.EmpresaId);
+            //EmailHelper.SendEmail(tos, sub, body, new[] { path }, opcao: bol.EmpresaId);
+            EmailHelper.SendGridEmail(tos, sub, body, new[] { path });
         }
 
         public void AlterarVencto(int tituloId, DateTime novoVencto, int usuarioId, decimal? valorTotal)

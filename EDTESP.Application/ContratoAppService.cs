@@ -490,7 +490,7 @@ namespace EDTESP.Application
                 {$"Contrato {contr.Numero}.pdf", bff }
             };
 
-            EmailHelper.SendEmail(tos, sub, body, attachs, from: emp.Email, opcao: contr.EmpresaId);
+            EmailHelper.SendGridEmail(tos, sub, body, attachs);
 
             contr.EnviadoAoCliente = true;
             RepoBase.Update(contr);
@@ -653,7 +653,7 @@ namespace EDTESP.Application
                 {$"CartaCancelamentoGeral.pdf", bff }
             };
 
-            EmailHelper.SendEmail(tos, sub, "", attachs, from: emp.Email, opcao: contr.EmpresaId);
+            EmailHelper.SendGridEmail(tos, sub, "", attachs);
         }
 
         public void EnviarCartaCancelamento2(int contratoId, string pasta = "", string contrato = "")
@@ -681,7 +681,7 @@ namespace EDTESP.Application
                 {$"CartaCancelamentoTotal.pdf", bff }
             };
 
-            EmailHelper.SendEmail(tos, sub, "", attachs, from: emp.Email, opcao: contr.EmpresaId);
+            EmailHelper.SendGridEmail(tos, sub, "", attachs);
         }
 
         public void EnviarCartaCancelamento3(int contratoId, string pasta = "", string contrato = "")
@@ -709,7 +709,7 @@ namespace EDTESP.Application
                 {$"Rescisao.pdf", bff }
             };
 
-            EmailHelper.SendEmail(tos, sub, "", attachs, from: emp.Email, opcao: contr.EmpresaId);
+            EmailHelper.SendGridEmail(tos, sub, "", attachs);
         }
 
         public void EnviarCartaCobranca(int contratoId, string pasta = "", int numeroContrato = 0)
@@ -737,7 +737,7 @@ namespace EDTESP.Application
                 {$"cobranca.pdf", bff }
             };
 
-            EmailHelper.SendEmail(tos, sub, "", attachs, from: emp.Email, opcao: contr.EmpresaId);
+            EmailHelper.SendGridEmail(tos, sub, "", attachs);
         }
 
         public byte[] GerarCartaCancelamentoModelo4(int contratoId, string pasta = "", string contrato = "")
@@ -819,7 +819,7 @@ namespace EDTESP.Application
                 {$"CartaCancelamentoGeralVinculada.pdf", bff }
             };
 
-            EmailHelper.SendEmail(tos, sub, "", attachs, from: emp.Email, opcao: contr.EmpresaId);
+            EmailHelper.SendGridEmail(tos, sub, "", attachs);
         }
 
         private string RetornarParcelasContratoPorExtenso(List<Titulo> lista)
