@@ -1,0 +1,22 @@
+﻿@{
+    var ctr = ViewContext.Controller.ValueProvider.GetValue("controller").RawValue?.ToString();
+    var act = ViewContext.Controller.ValueProvider.GetValue("action").RawValue?.ToString();
+    var url = Url.Action(act, ctr);
+    var dini = ((DateTime?)ViewBag.Ini).HasValue ? ((DateTime?)ViewBag.Ini).Value.ToString("dd/MM/yyyy") : "";
+    var dfim = ((DateTime?)ViewBag.Fim).HasValue ? ((DateTime?)ViewBag.Fim).Value.ToString("dd/MM/yyyy") : "";
+}
+@using (Html.BeginForm())
+{
+    <input class="mb-2" type="text" name="termo" placeholder="Busca" data-role="input" value="@ViewBag.Termo" autocomplete="off" />
+    <div class="inline-form mb-2 input-daterange">
+        <label>Data de Criação De</label>
+        <input type="text" name="emiini" id="dtIni" value="@dini" autocomplete="off">
+        <label> Até </label>
+        <input type="text" name="emifim" id="dtFim" value="@dfim" autocomplete="off">
+    </div>
+
+    <div class="mb-2">
+        <button type="submit" class="button primary">Buscar</button>
+        <button type="button" class="button secondary" onclick="window.location.href='@url'">Limpar</button>
+    </div>
+}

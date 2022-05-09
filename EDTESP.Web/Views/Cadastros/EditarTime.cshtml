@@ -1,0 +1,38 @@
+﻿@using EDTESP.Web.Helpers
+@model EDTESP.Web.ViewModels.Cadastros.TimeViewModel
+
+@{
+    ViewBag.Title = "Times";
+    ViewBag.SubTitle = "Editar Time";
+}
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(model => model.TimeId)
+    @Html.EdtespValidationSummary(null, new { @class = "alert alert-danger" })
+
+    <div class="row mb-2">
+        @Html.LabelFor(model => model.Descricao, htmlAttributes: new { @class = "cell-sm-2" })
+        <div class="cell-sm-10 no-gutters">
+            <div class="cell-sm-3">
+                @Html.EditorFor(model => model.Descricao, new { htmlAttributes = new {  } })
+            </div>
+            @Html.ValidationMessageFor(model => model.Descricao, "", new { @class = "fg-red" })
+        </div>
+    </div>
+    
+    <div class="row mb-2">
+        <div class="offset-sm-2 cell-sm-10">
+            <div class="cell">
+                <button type="submit" class="button primary">Salvar</button>
+                <a class="button link" href="@Url.Action("Times", "Cadastros")">Cancelar</a>
+            </div>
+        </div>
+    </div>
+
+}
+
+@section scripts
+{
+    @Scripts.Render("~/bundles/jqueryval")
+}

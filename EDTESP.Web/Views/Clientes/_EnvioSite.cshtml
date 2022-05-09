@@ -1,0 +1,11 @@
+﻿@{
+    Layout = null;
+}
+<div class="row">
+    <div class="cell-12">
+        <div class="form-group">
+            <label>Classif./Categoria Site</label>
+            @Html.DropDownList("classid", (IEnumerable<SelectListItem>)ViewBag.Classifs, new { data_role = "select"})
+        </div>
+    </div>
+</div>

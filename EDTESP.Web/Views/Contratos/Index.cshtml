@@ -1,0 +1,88 @@
+﻿
+@{
+    ViewBag.Title = "Contratos";
+}
+
+<div class="tiles-grid tiles-group size-3">
+    <div data-role="tile" data-size="medium" class="bg-blue" id="tile-cea">
+        <span class="mif-file-empty icon"></span>
+        <span class="branding-bar">Em Análise</span>
+        <span class="badge-top">0</span>
+    </div>
+    <div data-role="tile" data-size="medium" class="bg-green" id="tile-ca">
+        <span class="mif-file-play icon"></span>
+        <span class="branding-bar">Aprovados</span>
+        <span class="badge-top">0</span>
+    </div>
+    <div data-role="tile" data-size="medium" class="bg-red" id="tile-cr">
+        <span class="mif-cross icon"></span>
+        <span class="branding-bar">Reprovados</span>
+        <span class="badge-top">0</span>
+    </div>
+    <div data-role="tile" data-size="wide" class="bg-gray" id="tile-vnd">
+        <span class="mif-money icon"></span>
+        <span class="branding-bar">Minhas Vendas</span>
+        <span class="badge-top">R$ 1234,56</span>
+    </div>
+    <div data-role="tile" data-size="medium" class="bg-dark" id="">
+
+    </div>
+</div>
+
+<div class="tiles-grid tiles-group size-2">
+    <div data-role="tile" data-size="large" class="bg-light">
+        <canvas id="gcepd"></canvas>
+    </div>
+</div>
+
+
+
+@section scripts
+{
+    @Scripts.Render("~/bundles/chart")
+    <script>
+        $(document).ready(function() {
+            $.ajax({
+                url: '@Url.Action("ObterDadosDashboard", "Contratos")',
+                dataType: 'JSON',
+                success: function(data) {
+                    setGraficoGcepd(data);
+
+                    $("#tile-cea span.badge-top").text(data.EmAnalise);
+                    $("#tile-ca span.badge-top").text(data.Aprovados);
+                    $("#tile-cr span.badge-top").text(data.Reprovados);
+                    $("#tile-vnd span.badge-top").text(data.Valor);
+                }
+            });
+        });
+
+        function setGraficoGcepd(dados) {
+            var ctx = $('#gcepd');
+            var gcepd = new Chart(ctx,
+                {
+                    type: 'pie',
+                    data: {
+                        labels: dados.LabelsPizza,
+                        datasets: [
+                            {
+                                label: 'Contratos',
+                                data: dados.PorStatus,
+                                backgroundColor: [
+                                    '#00AFF0',
+                                    '#60a917',
+                                    '#CE352C',
+                                ],
+                            }
+                        ]
+                    },
+                    options: {
+                        title: {
+                            display: true,
+                            text: 'Contratos por Status'
+                        }
+                    }
+                });
+    }
+    </script>
+}
+

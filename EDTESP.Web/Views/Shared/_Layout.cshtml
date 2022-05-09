@@ -1,0 +1,65 @@
+﻿@{
+    var ctrl = ViewContext.Controller.ValueProvider.GetValue("controller")?.RawValue?.ToString();
+    var tab = ViewBag.CurrentTab;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="metro4:init" content="false">
+    <meta name="metro4:locale" content="pt-BR">
+    <meta name="metro4:week_start" content="0">
+    <title>@ViewBag.Title</title>
+    @*@Styles.Render("~/Content/bs4")
+        @Styles.Render("~/Content/mdb")
+        @Styles.Render("~/Content/fluent")*@
+    @Styles.Render("~/Content/m4")
+    @Styles.Render("~/Content/fa")
+    @Styles.Render("~/Content/css")
+    @RenderSection("styles", required: false)
+</head>
+<body>
+    @Html.Partial("_menuSuperior")
+    <div class="container-fluid">
+        <h1 class="my-5">
+            @ViewBag.Title
+            <small>@Html.Raw(ViewBag.SubTitle)</small>
+        </h1>
+        @RenderBody()
+    </div>
+
+    <div class="dialog no-border no-shadow bg-transparent global-dialog" id="dlgAct"
+         data-role="dialog"
+         data-default-action="false">
+        <div class="dialog-content d-flex flex-column flex-justify-center flex-align-center bg-transparent no-shadow w-auto">
+            <div data-role="activity" data-type="cycle" data-style="color"></div>
+        </div>
+    </div>
+
+    <script>
+        window.METRO_LOCALE = "pt-BR";
+    </script>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/m4")
+    @Scripts.Render("~/bundles/dt")
+    @Scripts.Render("~/scripts/defaultui.js")
+    <script type="text/javascript">
+        Metro.init();
+        $(document).ready(function () {
+            SelecionaRibbonTab('@tab');
+
+            $("nav[data-role='ribbonmenu'] button").on('click',
+                function() {
+                    var href = $(this).data('href');
+
+                    if (href == '' || href == undefined)
+                        return;
+
+                    window.location.href = href;
+                });
+        });
+    </script>
+    @RenderSection("scripts", required: false)
+</body>
+</html>

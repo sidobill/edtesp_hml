@@ -1,0 +1,88 @@
+﻿@using EDTESP.Web.Helpers
+@model EDTESP.Web.ViewModels.Cadastros.EditarUsuarioViewModel
+
+@{
+    ViewBag.Title = "Usuários";
+    ViewBag.SubTitle = "Editar Usuário";
+}
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(model => model.UsuarioId)
+    @Html.EdtespValidationSummary(null, new { @class = "alert alert-danger" })
+
+    <div class="row mb-2">
+        @Html.LabelFor(model => model.GrupoUsuarioId, htmlAttributes: new { @class = "cell-sm-2" })
+        <div class="cell-sm-10 no-gutters">
+            <div class="cell-sm-3">
+                @Html.DropDownList("GrupoUsuarioId", (IEnumerable<SelectListItem>)ViewBag.Grupos, new { })
+            </div>
+            @Html.ValidationMessageFor(model => model.GrupoUsuarioId, "", new { @class = "fg-red" })
+        </div>
+    </div>
+
+    <div class="row mb-2">
+        @Html.LabelFor(model => model.Login, htmlAttributes: new { @class = "cell-sm-2" })
+        <div class="cell-sm-10 no-gutters">
+            <div class="cell-sm-3">
+                @Html.EditorFor(model => model.Login, new { htmlAttributes = new { @readonly = "" } })
+            </div>
+            @Html.ValidationMessageFor(model => model.Login, "", new { @class = "fg-red" })
+        </div>
+    </div>
+
+    <div class="row mb-2">
+        @Html.LabelFor(model => model.Nome, htmlAttributes: new { @class = "cell-sm-2" })
+        <div class="cell-sm-10 no-gutters">
+            <div class="cell-sm-3">
+                @Html.EditorFor(model => model.Nome, new { htmlAttributes = new { } })
+            </div>
+            @Html.ValidationMessageFor(model => model.Nome, "", new { @class = "fg-red" })
+        </div>
+    </div>
+
+    <div class="row mb-2">
+        @Html.LabelFor(model => model.Sobrenome, htmlAttributes: new { @class = "cell-sm-2" })
+        <div class="cell-sm-10 no-gutters">
+            <div class="cell-sm-3">
+                @Html.EditorFor(model => model.Sobrenome, new { htmlAttributes = new { } })
+            </div>
+            @Html.ValidationMessageFor(model => model.Sobrenome, "", new { @class = "fg-red" })
+        </div>
+    </div>
+
+    <div class="row mb-2">
+        @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "cell-sm-2" })
+        <div class="cell-sm-10 no-gutters">
+            <div class="cell-sm-3">
+                @Html.EditorFor(model => model.Email, new { htmlAttributes = new { } })
+            </div>
+            @Html.ValidationMessageFor(model => model.Email, "", new { @class = "fg-red" })
+        </div>
+    </div>
+
+    <div class="row mb-2">
+        @Html.LabelFor(model => model.StatusId, htmlAttributes: new { @class = "cell-sm-2" })
+        <div class="cell-sm-10 no-gutters">
+            <div class="cell-sm-3">
+                @Html.DropDownList("StatusId", (IEnumerable<SelectListItem>)ViewBag.Status, new { data_role = "select" })
+            </div>
+            @Html.ValidationMessageFor(model => model.StatusId, "", new { @class = "fg-red" })
+        </div>
+    </div>
+    
+    <div class="row mb-2">
+        <div class="offset-sm-2 cell-sm-10">
+            <div class="cell">
+                <button type="submit" class="button primary">Salvar</button>
+                <a class="button link" href="@Url.Action("Usuarios", "Cadastros")">Cancelar</a>
+            </div>
+        </div>
+    </div>
+
+}
+
+@section scripts
+{
+    @Scripts.Render("~/bundles/jqueryval")
+}

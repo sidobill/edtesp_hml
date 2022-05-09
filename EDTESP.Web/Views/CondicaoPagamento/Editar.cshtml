@@ -1,0 +1,95 @@
+﻿@using EDTESP.Web.Helpers
+@model EDTESP.Web.ViewModels.Cadastros.CondicaoPagamentoViewModel
+
+@{
+    ViewBag.Title = "Condições de Pagamento";
+    ViewBag.SubTitle = "Editar Condição de Pagamento";
+}
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(model => model.CondicaoPagamentoId)
+    @Html.EdtespValidationSummary(null, new { @class = "alert alert-danger" })
+
+    <div class="row mb-2">
+        @Html.LabelFor(model => model.Descricao, htmlAttributes: new { @class = "cell-sm-2" })
+        <div class="cell-sm-10 no-gutters">
+            <div class="cell-sm-3">
+                @Html.EditorFor(model => model.Descricao, new { htmlAttributes = new { } })
+            </div>
+            @Html.ValidationMessageFor(model => model.Descricao, "", new { @class = "fg-red" })
+        </div>
+    </div>
+
+    <div class="row mb-2">
+        @Html.LabelFor(model => model.Modelo, htmlAttributes: new { @class = "cell-sm-2" })
+        <div class="cell-sm-10 no-gutters">
+            <div class="cell-sm-3">
+                <script>
+                    var cbtns = [
+                        {
+                            html: '<span class="mif-info" title="Ajuda"></span>',
+                            onclick: 'Metro.dialog.open("#dlgAjuda")',
+                        }
+                    ]
+                </script>
+                @Html.TextBoxFor(model => model.Modelo, new { data_role = "input", data_custom_buttons = "cbtns" })
+            </div>
+            @Html.ValidationMessageFor(model => model.Modelo, "", new { @class = "fg-red" })
+        </div>
+    </div>
+
+    <div class="row mb-2">
+        @Html.LabelFor(model => model.FormasPgto, htmlAttributes: new { @class = "cell-sm-2" })
+        <div class="cell-sm-10 no-gutters">
+            <div class="cell-sm-3">
+                @foreach (var fp in (IEnumerable<SelectListItem>)ViewBag.FormasPgto)
+                {
+                    <div class="cell">
+                        <input type="checkbox" name="FormasPgto" data-role="checkbox" data-caption="@fp.Text" value="@fp.Value" @(Model.FormasPgto.Contains(Convert.ToInt32(fp.Value)) ? "checked" : "") />
+                    </div>
+                }
+            </div>
+            @Html.ValidationMessageFor(model => model.FormasPgto, "", new { @class = "fg-red" })
+        </div>
+    </div>
+
+    <div class="row mb-2">
+        <div class="offset-sm-2 cell-sm-10 no-gutters">
+            <div class="cell-sm-3">
+                @Html.CheckBoxFor(model => model.Usado1Parc, new { @class = "", data_role = "checkbox", data_caption = Html.DisplayNameFor(model => model.Usado1Parc) })
+            </div>
+            @Html.ValidationMessageFor(model => model.Usado1Parc, "", new { @class = "fg-red" })
+        </div>
+    </div>
+
+    <div class="row mb-2">
+        <div class="offset-sm-2 cell-sm-10">
+            <div class="cell">
+                <button type="submit" class="button primary">Salvar</button>
+                <a class="button link" href="@Url.Action("Condicoes", "Cadastros")">Cancelar</a>
+            </div>
+        </div>
+    </div>
+
+}
+
+<div class="dialog" data-role="dialog" id="dlgAjuda" data-width="600">
+    <div class="dialog-title">Modelo para geração de Parcelas</div>
+    <div class="dialog-content">
+        <p>Aqui pode ser aplicado 3 modelos para geração de parcelas:</p>
+        <ul>
+            <li>Modelo 1: <code>12/30</code> <small>12 parcelas, cada parcela com intervalo de 30 dias</small></li>
+            <li>Modelo 2: <code>d5/6</code> <small>6 parcelas, cada parcela com vencimento no dia 5</small></li>
+            <li>Modelo 3: <code>0,30,...N</code> <small>Cada intervalo de dias entre cada vencimento, com N sendo o ultimo período</small></li>
+        </ul>
+    </div>
+    <div class="dialog-actions">
+        <button class="button primary js-dialog-close">Ok</button>
+    </div>
+</div>
+
+@section scripts
+{
+    @Scripts.Render("~/bundles/jqueryval")
+}

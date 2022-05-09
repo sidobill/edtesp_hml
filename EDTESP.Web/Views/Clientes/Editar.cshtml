@@ -1,0 +1,462 @@
+﻿@using EDTESP.Web.Helpers
+@model EDTESP.Web.ViewModels.Cadastros.ClienteViewModel
+
+@{
+    ViewBag.Title = "Clientes";
+    ViewBag.SubTitle = "Editar Cliente";
+}
+@using (Html.BeginForm("Editar", "Clientes", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(model => model.ClienteId)
+    @Html.EdtespValidationSummary(null, new { @class = "alert alert-danger" })
+
+    <div class="row mb-2">
+        @Html.LabelFor(model => model.TipoPessoa, htmlAttributes: new { @class = "cell-sm-3 cell-md-2" })
+        <div class="cell-sm-9 cell-md-10 no-gap">
+            <div class="cell cell-sm-3">
+                @Html.RadioButtonFor(model => model.TipoPessoa, "F", new { data_role = "radio", id = "TipoPessoaF", @class = "form-check-input", data_caption = "Física" })
+                @Html.RadioButtonFor(model => model.TipoPessoa, "J", new { data_role = "radio", id = "TipoPessoaJ", @class = "form-check-input", data_caption = "Jurídica" })
+            </div>
+            @Html.ValidationMessageFor(model => model.TipoPessoa, "", new { @class = "fg-red" })
+        </div>
+    </div>
+
+    <div class="row mb-2">
+        @Html.LabelFor(model => model.Documento, htmlAttributes: new { @class = "cell-sm-3 cell-md-2" })
+        <div class="cell-sm-9 cell-md-10 no-gap">
+            <div class="cell cell-md-3">
+                @Html.TextBoxFor(model => model.Documento, new { data_role = "input", @class = "" })
+            </div>
+            @Html.ValidationMessageFor(model => model.Documento, "", new { @class = "fg-red" })
+        </div>
+    </div>
+
+    <div class="row mb-2">
+        @Html.LabelFor(model => model.RazaoSocial, htmlAttributes: new { @class = "cell-sm-3 cell-md-2" })
+        <div class="cell-sm-9 cell-md-10 no-gap">
+            <div class="cell cell-md-3">
+                @Html.EditorFor(model => model.RazaoSocial, new { htmlAttributes = new { @class = "" } })
+            </div>
+            @Html.ValidationMessageFor(model => model.RazaoSocial, "", new { @class = "fg-red" })
+        </div>
+    </div>
+
+    <div class="row mb-2">
+        @Html.LabelFor(model => model.Fantasia, htmlAttributes: new { @class = "cell-sm-3 cell-md-2" })
+        <div class="cell-sm-9 cell-md-10 no-gap">
+            <div class="cell cell-md-3">
+                @Html.EditorFor(model => model.Fantasia, new { htmlAttributes = new { @class = "" } })
+            </div>
+            @Html.ValidationMessageFor(model => model.Fantasia, "", new { @class = "fg-red" })
+        </div>
+    </div>
+
+    <div class="row mb-2">
+        @Html.LabelFor(model => model.StatusId, htmlAttributes: new { @class = "cell-sm-3 cell-md-2" })
+        <div class="cell-sm-9 cell-md-10 no-gap">
+            <div class="cell cell-md-3">
+                @Html.DropDownList("StatusId", (IEnumerable<SelectListItem>)ViewBag.Status, new { data_role = "select", @class = "" })
+            </div>
+            @Html.ValidationMessageFor(model => model.StatusId, "", new { @class = "fg-red" })
+        </div>
+    </div>
+
+    <div class="mb-2">
+        <ul data-role="tabs" data-expand="true">
+            <li class="active">
+                <a class="active" href="#tab1">Dados de Contato</a>
+            </li>
+            <li>
+                <a href="#tab2">Endereço</a>
+            </li>
+            <li>
+                <a href="#tab3">Endereço Cobrança</a>
+            </li>
+            <li>
+                <a href="#tab4">Outros</a>
+            </li>
+        </ul>
+        <div>
+            <div id="tab1" class="border bd-default no-border-top p-2">
+                <div class="row mb-2">
+                    @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "cell-sm-3 cell-md-2" })
+                    <div class="cell-sm-9 cell-md-10 no-gap">
+                        <div class="cell cell-md-3">
+                            @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "" } })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.Email, "", new { @class = "fg-red" })
+                    </div>
+                </div>
+
+                <div class="row mb-2">
+                    @Html.LabelFor(model => model.EmailCobranca, htmlAttributes: new { @class = "cell-sm-3 cell-md-2" })
+                    <div class="cell-sm-9 cell-md-10 no-gap">
+                        <div class="cell cell-md-3">
+                            @Html.EditorFor(model => model.EmailCobranca, new { htmlAttributes = new { @class = "" } })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.EmailCobranca, "", new { @class = "fg-red" })
+                    </div>
+                </div>
+
+                <div class="row mb-2">
+                    @Html.LabelFor(model => model.EmailOutro, htmlAttributes: new { @class = "cell-sm-3 cell-md-2" })
+                    <div class="cell-sm-9 cell-md-10 no-gap">
+                        <div class="cell cell-md-3">
+                            @Html.EditorFor(model => model.EmailOutro, new { htmlAttributes = new { @class = "" } })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.EmailOutro, "", new { @class = "fg-red" })
+                    </div>
+                </div>
+
+                <div class="row mb-2">
+                    @Html.LabelFor(model => model.Telefone, htmlAttributes: new { @class = "cell-sm-3 cell-md-2" })
+                    <div class="cell-sm-9 cell-md-10 no-gap">
+                        <div class="cell cell-md-3">
+                            @Html.EditorFor(model => model.Telefone, new { htmlAttributes = new { @class = "" } })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.Telefone, "", new { @class = "fg-red" })
+                    </div>
+                </div>
+
+                <div class="row mb-2">
+                    @Html.LabelFor(model => model.Celular, htmlAttributes: new { @class = "cell-sm-3 cell-md-2" })
+                    <div class="cell-sm-9 cell-md-10 no-gap">
+                        <div class="cell cell-md-3">
+                            @Html.EditorFor(model => model.Celular, new { htmlAttributes = new { @class = "" } })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.Celular, "", new { @class = "fg-red" })
+                    </div>
+                </div>
+
+                <div class="row mb-2">
+                    @Html.LabelFor(model => model.Fax, htmlAttributes: new { @class = "cell-sm-3 cell-md-2" })
+                    <div class="cell-sm-9 cell-md-10 no-gap">
+                        <div class="cell cell-md-3">
+                            @Html.EditorFor(model => model.Fax, new { htmlAttributes = new { @class = "" } })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.Fax, "", new { @class = "fg-red" })
+                    </div>
+                </div>
+
+                <div class="row mb-2">
+                    @Html.LabelFor(model => model.TelefoneOutro, htmlAttributes: new { @class = "cell-sm-3 cell-md-2" })
+                    <div class="cell-sm-9 cell-md-10 no-gap">
+                        <div class="cell cell-md-3">
+                            @Html.EditorFor(model => model.TelefoneOutro, new { htmlAttributes = new { @class = "" } })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.TelefoneOutro, "", new { @class = "fg-red" })
+                    </div>
+                </div>
+            </div>
+            <div id="tab2" class="border bd-default no-border-top p-2">
+                <div class="row mb-2">
+                    @Html.LabelFor(model => model.Cep, htmlAttributes: new { @class = "cell-sm-3 cell-md-2" })
+                    <div class="cell-sm-9 cell-md-10 no-gap">
+                        <div class="cell cell-md-2">
+                            @Html.EditorFor(model => model.Cep, new { htmlAttributes = new { @class = "" } })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.Cep, "", new { @class = "fg-red" })
+                    </div>
+                </div>
+
+                <div class="row mb-2">
+                    @Html.LabelFor(model => model.Endereco, htmlAttributes: new { @class = "cell-sm-3 cell-md-2" })
+                    <div class="cell-sm-9 cell-md-10 no-gap">
+                        <div class="cell cell-md-4">
+                            @Html.EditorFor(model => model.Endereco, new { htmlAttributes = new { @class = "" } })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.Endereco, "", new { @class = "fg-red" })
+                    </div>
+                </div>
+
+                <div class="row mb-2">
+                    @Html.LabelFor(model => model.Numero, htmlAttributes: new { @class = "cell-sm-3 cell-md-2" })
+                    <div class="cell-sm-9 cell-md-10 no-gap">
+                        <div class="cell cell-md-2">
+                            @Html.EditorFor(model => model.Numero, new { htmlAttributes = new { @class = "" } })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.Numero, "", new { @class = "fg-red" })
+                    </div>
+                </div>
+
+                <div class="row mb-2">
+                    @Html.LabelFor(model => model.Complemento, htmlAttributes: new { @class = "cell-sm-3 cell-md-2" })
+                    <div class="cell-sm-9 cell-md-10 no-gap">
+                        <div class="cell cell-md-2">
+                            @Html.EditorFor(model => model.Complemento, new { htmlAttributes = new { @class = "" } })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.Complemento, "", new { @class = "fg-red" })
+                    </div>
+                </div>
+
+                <div class="row mb-2">
+                    @Html.LabelFor(model => model.Bairro, htmlAttributes: new { @class = "cell-sm-3 cell-md-2" })
+                    <div class="cell-sm-9 cell-md-10 no-gap">
+                        <div class="cell cell-md-3">
+                            @Html.EditorFor(model => model.Bairro, new { htmlAttributes = new { @class = "" } })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.Bairro, "", new { @class = "fg-red" })
+                    </div>
+                </div>
+
+                <div class="row mb-2">
+                    @Html.LabelFor(model => model.Cidade, htmlAttributes: new { @class = "cell-sm-3 cell-md-2" })
+                    <div class="cell-sm-9 cell-md-10 no-gap">
+                        <div class="cell cell-md-3">
+                            @Html.EditorFor(model => model.Cidade, new { htmlAttributes = new { @class = "" } })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.Cidade, "", new { @class = "fg-red" })
+                    </div>
+                </div>
+
+                <div class="row mb-2">
+                    @Html.LabelFor(model => model.Uf, htmlAttributes: new { @class = "cell-sm-3 cell-md-2" })
+                    <div class="cell-sm-9 cell-md-10 no-gap">
+                        <div class="cell cell-md-2">
+                            @Html.DropDownList("Uf", (IEnumerable<SelectListItem>)ViewBag.Ufs, new { data_role = "select", @class = "" })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.Uf, "", new { @class = "fg-red" })
+                    </div>
+                </div>
+            </div>
+            <div id="tab3" class="border bd-default no-border-top p-2">
+                <div class="row mb-2">
+                    @Html.LabelFor(model => model.CepCobr, htmlAttributes: new { @class = "cell-sm-3 cell-md-2" })
+                    <div class="cell-sm-9 cell-md-10 no-gap">
+                        <div class="cell cell-md-2">
+                            @Html.EditorFor(model => model.CepCobr, new { htmlAttributes = new { @class = "" } })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.CepCobr, "", new { @class = "fg-red" })
+                    </div>
+                </div>
+
+                <div class="row mb-2">
+                    @Html.LabelFor(model => model.EnderecoCobr, htmlAttributes: new { @class = "cell-sm-3 cell-md-2" })
+                    <div class="cell-sm-9 cell-md-10 no-gap">
+                        <div class="cell cell-md-4">
+                            @Html.EditorFor(model => model.EnderecoCobr, new { htmlAttributes = new { @class = "" } })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.EnderecoCobr, "", new { @class = "fg-red" })
+                    </div>
+                </div>
+
+                <div class="row mb-2">
+                    @Html.LabelFor(model => model.NumeroCobr, htmlAttributes: new { @class = "cell-sm-3 cell-md-2" })
+                    <div class="cell-sm-9 cell-md-10 no-gap">
+                        <div class="cell cell-md-2">
+                            @Html.EditorFor(model => model.NumeroCobr, new { htmlAttributes = new { @class = "" } })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.NumeroCobr, "", new { @class = "fg-red" })
+                    </div>
+                </div>
+
+                <div class="row mb-2">
+                    @Html.LabelFor(model => model.ComplementoCobr, htmlAttributes: new { @class = "cell-sm-3 cell-md-2" })
+                    <div class="cell-sm-9 cell-md-10 no-gap">
+                        <div class="cell cell-md-2">
+                            @Html.EditorFor(model => model.ComplementoCobr, new { htmlAttributes = new { @class = "" } })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.ComplementoCobr, "", new { @class = "fg-red" })
+                    </div>
+                </div>
+
+                <div class="row mb-2">
+                    @Html.LabelFor(model => model.BairroCobr, htmlAttributes: new { @class = "cell-sm-3 cell-md-2" })
+                    <div class="cell-sm-9 cell-md-10 no-gap">
+                        <div class="cell cell-md-3">
+                            @Html.EditorFor(model => model.BairroCobr, new { htmlAttributes = new { @class = "" } })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.BairroCobr, "", new { @class = "fg-red" })
+                    </div>
+                </div>
+
+                <div class="row mb-2">
+                    @Html.LabelFor(model => model.CidadeCobr, htmlAttributes: new { @class = "cell-sm-3 cell-md-2" })
+                    <div class="cell-sm-9 cell-md-10 no-gap">
+                        <div class="cell cell-md-3">
+                            @Html.EditorFor(model => model.CidadeCobr, new { htmlAttributes = new { @class = "" } })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.CidadeCobr, "", new { @class = "fg-red" })
+                    </div>
+                </div>
+
+                <div class="row mb-2">
+                    @Html.LabelFor(model => model.UfCobr, htmlAttributes: new { @class = "cell-sm-3 cell-md-2" })
+                    <div class="cell-sm-9 cell-md-10 no-gap">
+                        <div class="cell-md-2">
+                            @Html.DropDownList("UfCobr", (IEnumerable<SelectListItem>)ViewBag.Ufs, new { data_role = "select", @class = "" })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.UfCobr, "", new { @class = "fg-red" })
+                    </div>
+                </div>
+            </div>
+            <div id="tab4" class="border bd-default no-border-top p-2">
+                <div class="row mb-2">
+                    @Html.LabelFor(model => model.Responsavel, htmlAttributes: new { @class = "cell-sm-3 cell-md-2" })
+                    <div class="cell-sm-9 cell-md-10 no-gap">
+                        <div class="cell cell-md-3">
+                            @Html.EditorFor(model => model.Responsavel, new { htmlAttributes = new { @class = "" } })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.Responsavel, "", new { @class = "fg-red" })
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    @Html.LabelFor(model => model.ResponsavelCargo, htmlAttributes: new { @class = "cell-sm-3 cell-md-2" })
+                    <div class="cell-sm-9 cell-md-10 no-gap">
+                        <div class="cell cell-md-3">
+                            @Html.EditorFor(model => model.ResponsavelCargo, new { htmlAttributes = new { @class = "" } })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.ResponsavelCargo, "", new { @class = "fg-red" })
+                    </div>
+                </div>
+
+                <div class="row mb-2">
+                    @Html.LabelFor(model => model.Website, htmlAttributes: new { @class = "cell-sm-3 cell-md-2" })
+                    <div class="cell-sm-9 cell-md-10 no-gap">
+                        <div class="cell cell-md-3">
+                            @Html.EditorFor(model => model.Website, new { htmlAttributes = new { @class = "" } })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.Website, "", new { @class = "fg-red" })
+                    </div>
+                </div>
+                
+                <div class="row mb-2">
+                    @Html.LabelFor(model => model.Logo, htmlAttributes: new { @class = "cell-sm-3 cell-md-2" })
+                    <div class="cell-sm-9 cell-md-10 no-gap">
+                        <div class="cell cell-md-3">
+                            <input type="file" name="Logo" id="Logo" data-role="file" />
+                        </div>
+                        @Html.ValidationMessageFor(model => model.Logo, "", new { @class = "fg-red" })
+                    </div>
+                </div>
+
+                <div class="row mb-2">
+                    @Html.LabelFor(model => model.Observacao, htmlAttributes: new { @class = "cell-sm-3 cell-md-2" })
+                    <div class="cell-sm-9 cell-md-10 no-gap">
+                        <div class="cell cell-md-3">
+                            @Html.TextAreaFor(model => model.Observacao, new { @class = "", rows = "4" })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.Observacao, "", new { @class = "fg-red" })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-2">
+        <div class="offset-sm-2 cell-sm-9 cell-md-10">
+            <div class="cell cell-sm-3">
+                <button type="submit" class="button primary">Salvar</button>
+                <a class="button link" href="@Url.Action("Index", "Clientes")">Cancelar</a>
+            </div>
+        </div>
+    </div>
+
+}
+
+@section scripts
+{
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/masked")
+    <script>
+        $(function () {
+            var tp = '@Model.TipoPessoa';
+            if (tp == 'J') {
+                $("#Documento").mask('00.000.000/0000-00', { reverse: true });
+            } else {
+                $("#Documento").mask('000.000.000-00', { reverse: true });
+            }
+
+
+            $("#Cep").mask('00000-000');
+
+            $("#Telefone,#Fax").mask('(00) 0000-0000)');
+            $("#Celular,#TelefoneOutro").mask('(00) 00000-0000');
+
+            $("input[type='radio'][name='TipoPessoa']").on('change',
+                function() {
+                    if (this.value == 'F') {
+                        $("#Documento").mask('000.000.000-00', { reverse: true });
+                    } else {
+                        $("#Documento").mask('00.000.000/0000-00', { reverse: true });
+                    }
+                });
+
+            $("#Cep").on('change',
+                function() {
+                    var vlr = $(this).val();
+
+                    $.ajax({
+                        url: '@Url.Action("buscarcep", "base")',
+                        data: { cep: vlr },
+                        dataType: 'JSON',
+                        success: function(data) {
+                            $("#Endereco").val(data['logradouro']);
+                            $("#Bairro").val(data['bairro']);
+                            $("#Cidade").val(data['localidade']);
+                            $("#Uf").val(data['uf']);
+                            var sel = $("#Uf").data('select');
+                            sel.val(data['uf']);
+                            $("#Numero").focus();
+                        }
+                    });
+
+                });
+
+            $("#CepCobr").on('change',
+                function() {
+                    var vlr = $(this).val();
+
+                    $.ajax({
+                        url: '@Url.Action("buscarcep", "base")',
+                        data: { cep: vlr },
+                        dataType: 'JSON',
+                        success: function(data) {
+                            $("#EnderecoCobr").val(data['logradouro']);
+                            $("#BairroCobr").val(data['bairro']);
+                            $("#CidadeCobr").val(data['localidade']);
+                            $("#UfCobr").val(data['uf']);
+                            var sel = $("#UfCobr").data('select');
+                            sel.val(data['uf']);
+                            $("#NumeroCobr").focus();
+                        }
+                    });
+
+                });
+
+            $("#Documento").on('change',
+                function() {
+                    var doc = $(this).val();
+                    var tp = $("#Tipo").val();
+
+                    if (tp == 'F' || doc.length != 18)
+                        return;
+
+                    $.ajax({
+                        url: '@Url.Action("BuscaCnpj", "Base")',
+                        data: { cnpj: doc },
+                        dataType: 'JSON',
+                        success: function (data) {
+                            if (data.error) {
+                                console.log(data.msg);
+                                return;
+                            }
+
+                            $("#RazaoSocial").val(data.nome);
+                            $("#Fantasia").val(data.fantasia);
+
+                            $("#Telefone").val(data.telefone);
+                            $("#Email").val(data.email);
+
+                            $("#Cep").val($("#Cep").masked(data.cep));
+                            $("#Cep").trigger('change');
+                        },
+                        error: function() {
+
+                        }
+                    });
+                });
+        });
+    </script>
+}

@@ -1,0 +1,164 @@
+﻿@model IEnumerable<EDTESP.Web.ViewModels.Relatorios.ResumoVendaRepresentanteViewModel>
+
+@using (Html.BeginForm("ResumoVendaRepresentante", "Relatorios"))
+{
+    <div class="mb-2">
+        Vendedor:
+        @Html.DropDownList("vendedorId", null, new { @class = "mb-2" })
+        <div class="inline-form mb-2 input-daterange">
+            <label>Data de Criação De</label>
+            <input type="text" name="emiini" id="dtIni" value="@ViewBag.Ini" autocomplete="off">
+            <label> Até </label>
+            <input type="text" name="emifim" id="dtFim" value="@ViewBag.Fim" autocomplete="off">
+        </div>
+
+        <div class="mb-2">
+            <button type="submit" class="button primary">Buscar</button>
+            <button type="button" class="button secondary" onclick="window.location.href=''">Limpar</button>
+
+            @if (Model != null && Model.Any())
+            {
+                <button type="button" class="tool-button button bg-gray" title="Exportar p/ PDF" onclick="export2Pdf(this)">
+                    <span class="mif-file-pdf"></span>
+                </button>
+            }
+        </div>
+    </div>
+}
+
+<div class="row">
+    <div class="cell-12">
+        <table class="table table-hover table-striped table-sm" id="tblRel">
+            <thead>
+                <tr>
+                    <td>Contrato</td>
+                    <td>Cliente</td>
+                    <td>Data</td>
+                    <td>Edição</td>
+                    <td>Time</td>
+                    <td>Qtd. Parc.</td>
+                    <td>Valor contrato</td>
+                    <td>Comissão(%)</td>
+                    <td>Valor comissão</td>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.Any())
+                {
+                    foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.Numero</td>
+                            <td>@item.RazaoSocial</td>
+                            <td>@item.DataCriacao.ToString("dd/MM/yyyy")</td>
+                            <td>@item.AnoEdicao</td>
+                            <td>@item.Time</td>
+                            <td>@item.QtdParcela</td>
+                            <td>@item.ValorFinal.ToString("n2")</td>
+                            <td>@item.Comissao.ToString("n2")</td>
+                            <td>@item.ValorReceber.ToString("n2")</td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="11" class="text-center">Sem resultados</td>
+                    </tr>
+                }
+            </tbody>
+
+            @if(Model != null && Model.Any())
+            {
+                <tfoot>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>@Convert.ToDouble(ViewBag.ValorTotalContrato).ToString("n2")</td>
+                        <td></td>
+                        <td>@Convert.ToDouble(ViewBag.ValorTotalComissao).ToString("n2")</td>
+                    </tr>
+                </tfoot>
+            }
+        </table>
+    </div>
+</div>
+
+@section styles
+{
+    @Styles.Render("~/content/dt")
+    @Styles.Render("~/scripts/datatables/buttons/css/buttons.datatables.css")
+    @Styles.Render("~/content/bdp")
+    @Styles.Render("~/content/third-party/select2.css")
+}
+
+@section scripts
+{
+    @Scripts.Render("~/bundles/maskmoney")
+    @Scripts.Render("~/bundles/numeral")
+    @Scripts.Render("~/scripts/dateformat.js")
+    @Scripts.Render("~/scripts/jquery.fileDownload.js")
+    @Scripts.Render("~/bundles/masked")
+    @Scripts.Render("~/bundles/bdp")
+    @Scripts.Render("~/bundles/select2")
+    @Scripts.Render("~/scripts/datatables/jszip/jszip.js")
+    @Scripts.Render("~/scripts/datatables/buttons/js/datatables.buttons.js")
+    @Scripts.Render("~/scripts/datatables/pdfmake/pdfmake.js")
+    @Scripts.Render("~/scripts/datatables/pdfmake/vfs_fonts.js")
+    @Scripts.Render("~/scripts/datatables/buttons/js/buttons.html5.js")
+    @Scripts.Render("~/js/Utils.js")
+
+    <script type="text/javascript">
+        var table;
+
+        $(function () {
+            $('.input-daterange').datepicker({
+                language: 'pt-BR',
+                autoclose: true
+            });
+
+            $("#dtIni, #dtFim").mask("99/99/9999");
+
+            var dataInicial = $("#dtIni").val();
+            var dataFinal = $("#dtFim").val();
+            var vendedor = $("#vendedorId option:selected").text();
+
+            if (vendedor == "Selecione...") {
+                vendedor = "Todos";
+            }
+
+            var titulo = formatTitleReport(dataInicial, dataFinal, "Resumo venda representante", vendedor);
+
+            table = $("#tblRel").DataTable({
+                searching: false,
+                dom: 'frtip',
+                buttons: [
+                    {
+                        extend: 'pdfHtml5',
+                        text: 'Exportar p/ PDF',
+                        classname: 'button bg-gray',
+                        orientation: 'landscape',
+                        pageSize: 'LEGAL',
+                        title: titulo,
+                        filename: 'ResumoVendaRepresentante',
+                        footer: true
+                    }
+                ],
+                language: {
+                    url: '@Url.Content("~/scripts/datatables/datatables.pt-br.json")'
+                }
+            });
+        });
+
+        function export2Pdf() {
+            table.button(0).trigger();
+        }
+    </script>
+}
+
+
+

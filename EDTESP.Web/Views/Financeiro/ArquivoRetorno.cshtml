@@ -1,0 +1,58 @@
+﻿
+@using (Html.BeginForm("ArquivoRetorno", "Financeiro", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div class="row mb-12">
+        <label class="cell-sm-3 cell-md-2">Upload do arquivo:</label>
+        <div class="cell-sm-9 cell-md-10 no-gap">
+            <div class="cell cell-md-4">
+                <input type="file" name="file" data-role="file" />
+            </div>
+
+        </div>
+    </div>
+    <div class="row mb-12">
+        <div class="offset-sm-2 cell-sm-9 cell-md-10">
+            <div class="cell cell-sm-3">
+                <button type="submit" class="button primary">Processar arquivo</button>
+            </div>
+        </div>
+    </div>
+}
+
+@section scripts
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var mensagemErro = '@ViewBag.Erro';
+            var mensagemSucesso = '@ViewBag.Sucesso';
+
+            if (mensagemErro != "") {
+                Metro.dialog.create({
+                    title: "Mensagem de retorno",
+                    clsTitle: 'bg-red fg-white',
+                    content: mensagemErro,
+                    actions: [
+                        {
+                            caption: 'Ok',
+                            cls: 'alert js-dialog-close'
+                        }
+                    ]
+                });
+            }
+            else if (mensagemSucesso != "") {
+                Metro.dialog.create({
+                    title: "Mensagem de retorno",
+                    clsTitle: 'bg-cobalt fg-white',
+                    content: "Arquivo processado com sucesso",
+                    actions: [
+                        {
+                            caption: 'Ok',
+                            cls: 'success js-dialog-close'
+                        }
+                    ]
+                });
+            }
+        });
+        
+    </script>
+}

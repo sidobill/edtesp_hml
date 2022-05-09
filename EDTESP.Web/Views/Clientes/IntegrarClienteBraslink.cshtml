@@ -1,0 +1,316 @@
+﻿@using EDTESP.Web.Helpers
+@using PagedList.Mvc
+@model PagedList.IPagedList<EDTESP.Web.ViewModels.Cadastros.ClienteViewModel>
+
+@using (Html.BeginForm())
+{
+    <div class="mb-2">
+        Nome do cliente:
+        <input type="text" name="nome" id="nome" value="@ViewBag.NomeCli" autocomplete="off" />
+
+        <div class="mb-2" style="margin-top:10px">
+            <button type="submit" class="button primary">Buscar</button>
+        </div>
+    </div>
+}
+
+<input type="hidden" id="hfCodigoEdtesp"/>
+
+<div class="">
+    <table class="table table-hover table-striped table-sm">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Razão social</th>
+                <th>Nome fantasia</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Any())
+            {
+                foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.ClienteId</td>
+                        <td>@item.RazaoSocial</td>
+                        <td>@item.Fantasia</td>
+                        <td>
+                            <div class="toolbar">
+                                @if (!item.IntegradoBraslink)
+                                {
+                                    <button class="tool-button success" id="btnInserir_@item.ClienteId" title="Inserir na braslink" onclick="integrarParaBrasilink(@item.ClienteId)">
+                                        <span class="mif-plus"></span>
+                                    </button>
+                                    <button class="tool-button yellow" id="btnAtualizar_@item.ClienteId" title="Editar dados na braslink" style="display:none">
+                                        <span class="mif-pencil"></span>
+                                    </button>
+                                    <button class="tool-button alert" id="btnExcluir_@item.ClienteId" title="Excluir dados na braslink" onclick="excluirClienteBrasilink(@item.ClienteId)" style="display:none">
+                                        <span class="mif-cross"></span>
+                                    </button>
+                                }
+                                else
+                                {
+                                    <button class="tool-button success" id="btnInserir_@item.ClienteId" title="Inserir na braslink" onclick="integrarParaBrasilink(@item.ClienteId)" style="display:none">
+                                        <span class="mif-plus"></span>
+                                    </button>
+                                    <button class="tool-button yellow" id="btnAtualizar_@item.ClienteId" title="Editar dados na braslink" onclick="alterarClienteBrasilink(@item.ClienteId)">
+                                        <span class="mif-pencil"></span>
+                                    </button>
+                                    <button class="tool-button alert" id="btnExcluir_@item.ClienteId" title="Excluir dados na braslink" onclick="excluirClienteBrasilink(@item.ClienteId)">
+                                        <span class="mif-cross"></span>
+                                    </button>
+                                }
+                            </div>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="6" class="text-center">Sem resultados</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@section scripts
+{
+    <script src="~/Scripts/bootstrap.min.js"></script>
+
+    <script>
+        function integrarParaBrasilink(clienteId) {
+            Metro.dialog.create({
+                title: 'Confirmação',
+                content:"Deseja inserir o cliente na Braslink?",
+                actions: [
+                    {
+                        caption: 'Sim',
+                        cls: 'js-dialog-close primary',
+                        onclick: function () {
+
+                            showActivity();
+
+                            var cliente = clienteId;
+
+                            $.ajax({
+                                url: '@Url.Action("InserirClienteBraslink", "Clientes")',
+                                data: { id: cliente },
+                                dataType: 'JSON',
+                                type: 'POST',
+                                success: function (data) {
+                                    if (data != null && data.Sucesso) {
+                                        showNotificationInfo('Cliente integrado com sucesso');
+
+                                        $("#btnInserir_" + cliente).hide();
+                                        $("#btnAtualizar_" + cliente).show();
+                                        $("#btnExcluir_" + cliente).show();
+                                    }
+                                    else {
+                                        showError('Erro', 'Erro ao integrar. Verifique com o suporte');
+                                    }
+
+                                    closeActivity();
+                                },
+                                error: function () {
+                                    showError('Erro', 'Erro ao executar a operação');
+
+                                    closeActivity();
+                                }
+                            });
+                        }
+                    },
+                    {
+                        caption: 'Cancelar',
+                        cls: 'js-dialog-close'
+                    }
+                ]
+            });
+        }
+
+        function excluirClienteBrasilink(clienteId) {
+            Metro.dialog.create({
+                title: 'Confirmação',
+                content:"Deseja excluir o cliente na Braslink?",
+                actions: [
+                    {
+                        caption: 'Sim',
+                        cls: 'js-dialog-close primary',
+                        onclick: function () {
+
+                            showActivity();
+
+                            var cliente = clienteId;
+
+                            $.ajax({
+                                url: '@Url.Action("ExcluirClienteBraslink", "Clientes")',
+                                data: { id: cliente },
+                                dataType: 'JSON',
+                                type: 'POST',
+                                success: function (data) {
+                                    if (data != null && data.Sucesso) {
+                                        showNotificationInfo('Cliente excluído com sucesso');
+
+                                        $("#btnInserir_" + cliente).show();
+                                        $("#btnAtualizar_" + cliente).hide();
+                                        $("#btnExcluir_" + cliente).hide();
+                                    }
+                                    else {
+                                        showError('Erro', 'Erro ao excluir. Verifique com o suporte');
+                                    }
+
+                                    closeActivity();
+                                },
+                                error: function () {
+                                    showError('Erro', 'Erro ao executar a operação');
+
+                                    closeActivity();
+                                }
+                            });
+                        }
+                    },
+                    {
+                        caption: 'Cancelar',
+                        cls: 'js-dialog-close'
+                    }
+                ]
+            });
+        }
+
+        function alterarClienteBrasilink(clienteId) {
+            $("#hfCodigoEdtesp").val(clienteId);
+
+            $.ajax({
+                url: '@Url.Action("RetornarDadosClientePeloId", "Clientes")',
+                data: { clienteId: clienteId },
+                dataType: 'JSON',
+                type: 'POST',
+                success: function (data) {
+                    if (data != null && data.Sucesso && data.ResultadoObjeto != null) {
+                        var formulario = "<div class='grid'>";
+                        formulario += "<div class='row'>";
+
+                        formulario += "<div class='cell-12'>";
+                        formulario += "Cliente:<input type='text' id='txtClienteBl' value='" + data.ResultadoObjeto.Cliente + "' /> ";
+                        formulario += "</div>";
+
+                        formulario += "<div class='cell-8'>";
+                        formulario += "Logradouro:<input type='text' id='txtLogBl' value='" + data.ResultadoObjeto.Logradouro + "' />";
+                        formulario += "</div>";
+
+                        formulario += "<div class='cell-4'>";
+                        formulario += "Número:<input type='text' id='txtNumeroBl' value='" + data.ResultadoObjeto.Numero + "' />";
+                        formulario += "</div>";
+
+                        formulario += "<div class='cell-4'>";
+                        formulario += "Complemento:<input type='text' id='txtComlBl' value='" + data.ResultadoObjeto.Compl + "' />";
+                        formulario += "</div>";
+
+                        formulario += "<div class='cell-4'>";
+                        formulario += "Bairro:<input type='text' id='txtBairropBl' value='" + data.ResultadoObjeto.Bairro + "' />";
+                        formulario += "</div>";
+
+                        formulario += "<div class='cell-4'>";
+                        formulario += "CEP:<input type='text' id='txtCepBl' value='" + data.ResultadoObjeto.Cep + "' />";
+                        formulario += "</div>";
+                      
+                        formulario += "<div class='cell-4'>";
+                        formulario += "Cidade:<input type='text' id='txtCidadeBl' value='" + data.ResultadoObjeto.Cidade + "' />";
+                        formulario += "</div>";
+
+                        formulario += "<div class='cell-4'>";
+                        formulario += "UF:<input type='text' id='txtUfBl' value='" + data.ResultadoObjeto.Uf + "' />";
+                        formulario += "</div>";
+
+                        formulario += "<div class='cell-4'>";
+                        formulario += "Telefone:<input type='text' id='txtTelefoneBl' value='" + data.ResultadoObjeto.Telefone + "' />";
+                        formulario += "</div>";
+
+                        formulario += "<div class='cell-6'>";
+                        formulario += "E-mail:<input type='text' id='txtEmailBl' value='" + data.ResultadoObjeto.Email + "' />";
+                        formulario += "</div>";
+
+                        formulario += "<div class='cell-6'>";
+                        formulario += "Site:<input type='text' id='txtSitepBl' value='" + data.ResultadoObjeto.WebSite + "' />";
+                        formulario += "</div>";
+
+                        formulario += "</div>";
+                        formulario += "</div>";
+
+                        Metro.dialog.create({
+                            title: 'Edição',
+                            content: formulario,
+                            width: 800,
+                            actions: [
+                                {
+                                    caption: 'Salvar',
+                                    cls: 'js-dialog-close primary',
+                                    onclick: function () {
+
+                                        showActivity();
+
+                                        var cliente = $("#txtClienteBl").val();
+                                        var logradouro = $("#txtLogBl").val();
+                                        var numero = $("#txtNumeroBl").val();
+                                        var complemento = $("#txtComlBl").val();
+                                        var bairro = $("#txtBairropBl").val();
+                                        var cep = $("#txtCepBl").val();
+                                        var cidade = $("#txtCidadeBl").val();
+                                        var uf = $("#txtUfBl").val();
+                                        var telefone = $("#txtTelefoneBl").val();
+                                        var email = $("#txtEmailBl").val();
+                                        var site = $("#txtSitepBl").val();
+                                        var codigo = $("#hfCodigoEdtesp").val();
+
+                                        var objetoDados = { Cliente: cliente, Logradouro: logradouro, Numero: numero, Compl: complemento, Bairro: bairro, Cep: cep, Cidade: cidade, Uf: uf, Telefone: telefone, Email: email, WebSite: site, CodigoEdtesp: codigo };
+
+                                        $.ajax({
+                                            url: '@Url.Action("AlterarClienteBraslink", "Clientes")',
+                                            data: { json: JSON.stringify(objetoDados) },
+                                            dataType: 'JSON',
+                                            type: 'POST',
+                                            success: function (data) {
+                                                if (data != null && data.Sucesso) {
+                                                    showNotificationInfo('Edição feita com sucesso');
+
+                                                    
+                                                }
+                                                else {
+                                                    showError('Erro', 'Erro ao editar. Verifique com o suporte');
+                                                }
+
+                                                closeActivity();
+                                            },
+                                            error: function () {
+                                                showError('Erro', 'Erro ao executar a operação');
+
+                                                closeActivity();
+                                            }
+                                        });
+                                    }
+                                },
+                                {
+                                    caption: 'Cancelar',
+                                    cls: 'js-dialog-close'
+                                }
+                            ]
+                        });
+                    }
+                    else {
+                        showError('Erro', 'Erro ao buscar. Verifique com o suporte');
+                    }
+
+                    closeActivity();
+                },
+                error: function () {
+                    showError('Erro', 'Erro ao executar a operação');
+
+                    closeActivity();
+                }
+            });
+        }
+    </script>
+}
+

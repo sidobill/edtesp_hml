@@ -1,0 +1,68 @@
+﻿@model EDTESP.Web.ViewModels.Financeiro.TituloViewModel
+@{
+    Layout = null;
+}
+        <div class="row">
+            <div class="cell">
+
+                <div class="row mb-2">
+                    @Html.LabelFor(model => model.TituloId, new { @class = "cell cell-md-2" })
+                    @Html.DisplayFor(model => model.TituloId, new { @class = "cell cell-md-10", @readonly = "" })
+                </div>
+
+                <div class="row mb-2">
+                    @Html.LabelFor(model => model.Contrato, new { @class = "cell cell-md-2" })
+                    @Html.DisplayFor(model => model.Contrato, new { @class = "cell cell-md-10", @readonly = "" })
+                </div>
+
+                <div class="row mb-2">
+                    @Html.LabelFor(model => model.Cliente, new { @class = "cell cell-md-2" })
+                    @Html.DisplayFor(model => model.Cliente, new { @class = "cell cell-md-10", @readonly = "" })
+                </div>
+
+                <div class="row mb-2">
+                    @Html.LabelFor(model => model.Vendedor, new { @class = "cell cell-md-2" })
+                    @Html.DisplayFor(model => model.Vendedor, new { @class = "cell cell-md-10", @readonly = "" })
+                </div>
+
+                <div class="row mb-2">
+                    @Html.LabelFor(model => model.DataCriacao, new { @class = "cell cell-md-2" })
+                    @Html.DisplayFor(model => model.DataCriacao, new { @class = "cell cell-md-10", @readonly = "", disabled = "" })
+                </div>
+
+                <div class="row mb-2">
+                    @Html.LabelFor(model => model.DataVencto, new { @class = "cell cell-md-2" })
+                    @Html.DisplayFor(model => model.DataVencto, new { @class = "cell cell-md-10", @readonly = "", disabled = "" })
+                </div>
+
+                <div class="row mb-2">
+                    @Html.LabelFor(model => model.DataVenctoReal, new { @class = "cell cell-md-2" })
+                    @Html.DisplayFor(model => model.DataVenctoReal, new { @class = "cell cell-md-10", @readonly = "", disabled = "" })
+                </div>
+
+                <div class="row mb-2">
+                    @Html.LabelFor(model => model.Valor, new { @class = "cell cell-md-2" })
+                    @Html.DisplayFor(model => model.Valor, new { @class = "cell cell-md-10", @readonly = "" })
+                </div>
+
+                <div class="row mb-2">
+                    @Html.LabelFor(model => model.Saldo, new { @class = "cell cell-md-2" })
+                    @Html.DisplayFor(model => model.Saldo, new { @class = "cell cell-md-10", @readonly = "" })
+                </div>
+
+                <div class="row mb-2">
+                    @Html.LabelFor(model => model.StatusPgto, new { @class = "cell cell-md-2" })
+                    @Html.DisplayFor(model => model.StatusPgto, new { @class = "cell cell-md-10", @readonly = "" })
+                </div>
+
+                <div class="row mb-2">
+                    @Html.LabelFor(model => model.UltimoBoleto.NossoNumeroBanco, new { @class = "cell cell-md-2" })
+                    @Html.DisplayFor(model => model.UltimoBoleto.NossoNumeroBanco, new { @class = "cell cell-md-10", @readonly = "" })
+                </div>
+
+                <div class="row mb-2">
+                    @Html.LabelFor(model => model.FormaPagamento, new { @class = "cell cell-md-2" })
+                    @Html.DisplayFor(model => model.FormaPagamento, new { @class = "cell cell-md-10", @readonly = "" })
+                </div>
+            </div>
+        </div>

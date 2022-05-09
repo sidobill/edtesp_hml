@@ -1,0 +1,29 @@
+﻿#content {
+    width: calc(100% - 250px);
+    
+    min-height: 100vh;
+    transition: all 0.3s;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+#content.active {
+    width: 100%;
+}
+
+    #content.active > .fixed-top {
+        left: 0;
+    }
+
+    #content > .fixed-top {
+        left: 250px;
+    }
+
+    #content > .container-fluid {
+        margin-top: 55px;
+    }
+
+    .btn {
+        margin: 0;
+    }

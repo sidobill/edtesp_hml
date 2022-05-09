@@ -1,0 +1,370 @@
+﻿@using EDTESP.Web.Helpers
+@model EDTESP.Web.ViewModels.Cadastros.VendedorViewModel
+
+@{
+    ViewBag.Title = "Vendedores";
+    ViewBag.SubTitle = "Novo Vendedor";
+}
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.EdtespValidationSummary(null, new { @class = "alert alert-danger" })
+
+    <div class="row mb-2">
+        @Html.LabelFor(model => model.Cpf, htmlAttributes: new { @class = "cell-sm-2" })
+        <div class="cell-sm-10 no-gutters">
+            <div class="cell-sm-3">
+                @Html.EditorFor(model => model.Cpf, new { htmlAttributes = new { } })
+            </div>
+            @Html.ValidationMessageFor(model => model.Cpf, "", new { @class = "fg-red" })
+        </div>
+    </div>
+
+    <div class="row mb-2">
+        @Html.LabelFor(model => model.Nome, htmlAttributes: new { @class = "cell-sm-2" })
+        <div class="cell-sm-10 no-gutters">
+            <div class="cell-sm-3">
+                @Html.EditorFor(model => model.Nome, new { htmlAttributes = new { } })
+            </div>
+            @Html.ValidationMessageFor(model => model.Nome, "", new { @class = "fg-red" })
+        </div>
+    </div>
+
+    <div class="row mb-2">
+        @Html.LabelFor(model => model.VendedorAlcadaId, htmlAttributes: new { @class = "cell-sm-2" })
+        <div class="cell-sm-10 no-gutters">
+            <div class="cell-sm-3">
+                @Html.DropDownList("VendedorAlcadaId", (IEnumerable<SelectListItem>)ViewBag.Alcadas, new { data_role = "select" })
+            </div>
+            @Html.ValidationMessageFor(model => model.VendedorAlcadaId, "", new { @class = "fg-red" })
+        </div>
+    </div>
+
+    <div class="row mb-2">
+        @Html.LabelFor(model => model.StatusVendedor, htmlAttributes: new { @class = "cell-sm-2" })
+        <div class="cell-sm-10 no-gutters">
+            <div class="cell-sm-3">
+                @Html.DropDownList("StatusVendedorId", (IEnumerable<SelectListItem>)ViewBag.Status, new { data_role = "select" })
+            </div>
+            @Html.ValidationMessageFor(model => model.StatusVendedorId, "", new { @class = "fg-red" })
+        </div>
+    </div>
+
+    <div class="mb-2">
+        <ul data-role="tabs" data-expand="true">
+            <li class="active">
+                <a class="active" href="#tab1">Geral</a>
+            </li>
+            <li>
+                <a class="active" href="#tab4">Vínculo</a>
+            </li>
+            <li>
+                <a class="active" href="#tab2">Endereço</a>
+            </li>
+            <li>
+                <a class="active" href="#tab3">Contato</a>
+            </li>
+            <li>
+                <a class="active" href="#tab5">Observações</a>
+            </li>
+        </ul>
+        <div>
+            <div id="tab1" class="border bd-default no-border-top p-2">
+                <div class="row mb-2">
+                    @Html.LabelFor(model => model.Rg, htmlAttributes: new { @class = "cell-sm-2" })
+                    <div class="cell-sm-10 no-gutters">
+                        <div class="cell-sm-3">
+                            @Html.EditorFor(model => model.Rg, new { htmlAttributes = new { } })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.Rg, "", new { @class = "fg-red" })
+                    </div>
+                </div>
+
+                <div class="row mb-2">
+                    @Html.LabelFor(model => model.Ctps, htmlAttributes: new { @class = "cell-sm-2" })
+                    <div class="cell-sm-10 no-gutters">
+                        <div class="cell-sm-3">
+                            @Html.EditorFor(model => model.Ctps, new { htmlAttributes = new { } })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.Ctps, "", new { @class = "fg-red" })
+                    </div>
+                </div>
+
+                <div class="row mb-2">
+                    @Html.LabelFor(model => model.CtpsSerie, htmlAttributes: new { @class = "cell-sm-2" })
+                    <div class="cell-sm-10 no-gutters">
+                        <div class="cell-sm-3">
+                            @Html.EditorFor(model => model.CtpsSerie, new { htmlAttributes = new { } })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.CtpsSerie, "", new { @class = "fg-red" })
+                    </div>
+                </div>
+
+                <div class="row mb-2">
+                    @Html.LabelFor(model => model.Nascimento, htmlAttributes: new { @class = "cell-sm-2" })
+                    <div class="cell-sm-10 no-gutters">
+                        <div class="cell-sm-3">
+                            @Html.TextBoxFor(model => model.Nascimento, new { data_role = "calendarpicker", data_input_format = "%d/%m/%Y", data_format = "%d/%m/%Y" })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.Nascimento, "", new { @class = "fg-red" })
+                    </div>
+                </div>
+
+                <div class="row mb-2">
+                    @Html.LabelFor(model => model.NomeReduzido, htmlAttributes: new { @class = "cell-sm-2" })
+                    <div class="cell-sm-10 no-gutters">
+                        <div class="cell-sm-3">
+                            @Html.EditorFor(model => model.NomeReduzido, new { htmlAttributes = new { } })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.NomeReduzido, "", new { @class = "fg-red" })
+                    </div>
+                </div>
+            </div>
+            <div id="tab2" class="border bd-default no-border-top p-2">
+                <div class="row mb-2">
+                    @Html.LabelFor(model => model.Cep, htmlAttributes: new { @class = "cell-sm-2" })
+                    <div class="cell-sm-10 no-gutters">
+                        <div class="cell-sm-3">
+                            @Html.EditorFor(model => model.Cep, new { htmlAttributes = new { } })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.Cep, "", new { @class = "fg-red" })
+                    </div>
+                </div>
+
+                <div class="row mb-2">
+                    @Html.LabelFor(model => model.Endereco, htmlAttributes: new { @class = "cell-sm-2" })
+                    <div class="cell-sm-10 no-gutters">
+                        <div class="cell-sm-3">
+                            @Html.EditorFor(model => model.Endereco, new { htmlAttributes = new { } })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.Endereco, "", new { @class = "fg-red" })
+                    </div>
+                </div>
+
+                <div class="row mb-2">
+                    @Html.LabelFor(model => model.Numero, htmlAttributes: new { @class = "cell-sm-2" })
+                    <div class="cell-sm-10 no-gutters">
+                        <div class="cell-sm-3">
+                            @Html.EditorFor(model => model.Numero, new { htmlAttributes = new { } })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.Numero, "", new { @class = "fg-red" })
+                    </div>
+                </div>
+
+                <div class="row mb-2">
+                    @Html.LabelFor(model => model.Complemento, htmlAttributes: new { @class = "cell-sm-2" })
+                    <div class="cell-sm-10 no-gutters">
+                        <div class="cell-sm-3">
+                            @Html.EditorFor(model => model.Complemento, new { htmlAttributes = new { } })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.Complemento, "", new { @class = "fg-red" })
+                    </div>
+                </div>
+
+                <div class="row mb-2">
+                    @Html.LabelFor(model => model.Bairro, htmlAttributes: new { @class = "cell-sm-2" })
+                    <div class="cell-sm-10 no-gutters">
+                        <div class="cell-sm-3">
+                            @Html.EditorFor(model => model.Bairro, new { htmlAttributes = new { } })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.Bairro, "", new { @class = "fg-red" })
+                    </div>
+                </div>
+
+                <div class="row mb-2">
+                    @Html.LabelFor(model => model.Cidade, htmlAttributes: new { @class = "cell-sm-2" })
+                    <div class="cell-sm-10 no-gutters">
+                        <div class="cell-sm-3">
+                            @Html.EditorFor(model => model.Cidade, new { htmlAttributes = new { } })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.Cidade, "", new { @class = "fg-red" })
+                    </div>
+                </div>
+
+                <div class="row mb-2">
+                    @Html.LabelFor(model => model.Uf, htmlAttributes: new { @class = "cell-sm-3 cell-md-2" })
+                    <div class="cell-sm-9 cell-md-10 no-gap">
+                        <div class="cell cell-md-2">
+                            @Html.DropDownList("Uf", (IEnumerable<SelectListItem>)ViewBag.Ufs, new { data_role = "select", @class = "" })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.Uf, "", new { @class = "fg-red" })
+                    </div>
+                </div>
+            </div>
+            <div id="tab3" class="border bd-default no-border-top p-2">
+                <div class="row mb-2">
+                    @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "cell-sm-2" })
+                    <div class="cell-sm-10 no-gutters">
+                        <div class="cell-sm-3">
+                            @Html.EditorFor(model => model.Email, new { htmlAttributes = new { } })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.Email, "", new { @class = "fg-red" })
+                    </div>
+                </div>
+
+                <div class="row mb-2">
+                    @Html.LabelFor(model => model.Telefone, htmlAttributes: new { @class = "cell-sm-2" })
+                    <div class="cell-sm-10 no-gutters">
+                        <div class="cell-sm-3">
+                            @Html.EditorFor(model => model.Telefone, new { htmlAttributes = new { } })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.Telefone, "", new { @class = "fg-red" })
+                    </div>
+                </div>
+
+                <div class="row mb-2">
+                    @Html.LabelFor(model => model.Celular, htmlAttributes: new { @class = "cell-sm-2" })
+                    <div class="cell-sm-10 no-gutters">
+                        <div class="cell-sm-3">
+                            @Html.EditorFor(model => model.Celular, new { htmlAttributes = new { } })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.Celular, "", new { @class = "fg-red" })
+                    </div>
+                </div>
+            </div>
+            <div id="tab4" class="border bd-default no-border-top p-2">
+                <div class="row mb-2">
+                    @Html.LabelFor(model => model.Setor, htmlAttributes: new { @class = "cell-sm-2" })
+                    <div class="cell-sm-10 no-gutters">
+                        <div class="cell-sm-3">
+                            @Html.DropDownList("SetorId", (IEnumerable<SelectListItem>)ViewBag.Setores, new { data_role = "select", @class = "" })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.Setor, "", new { @class = "fg-red" })
+                    </div>
+                </div>
+
+                <div class="row mb-2">
+                    @Html.LabelFor(model => model.Cargo, htmlAttributes: new { @class = "cell-sm-2" })
+                    <div class="cell-sm-10 no-gutters">
+                        <div class="cell-sm-3">
+                            @Html.DropDownList("CargoId", (IEnumerable<SelectListItem>)ViewBag.Cargos, new { data_role = "select", @class = "" })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.Cargo, "", new { @class = "fg-red" })
+                    </div>
+                </div>
+
+                <div class="row mb-2">
+                    @Html.LabelFor(model => model.Time, htmlAttributes: new { @class = "cell-sm-2" })
+                    <div class="cell-sm-10 no-gutters">
+                        <div class="cell-sm-3">
+                            @Html.DropDownList("TimeId", (IEnumerable<SelectListItem>)ViewBag.Times, new { data_role = "select", @class = "" })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.Time, "", new { @class = "fg-red" })
+                    </div>
+                </div>
+
+                <div class="row mb-2">
+                    @Html.LabelFor(model => model.DataAdmissao, htmlAttributes: new { @class = "cell-sm-2" })
+                    <div class="cell-sm-10 no-gutters">
+                        <div class="cell-sm-3">
+                            @Html.TextBoxFor(model => model.DataAdmissao, new { data_role = "calendarpicker", data_input_format = "%d/%m/%Y", data_format = "%d/%m/%Y" })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.DataAdmissao, "", new { @class = "fg-red" })
+                    </div>
+                </div>
+
+                <div class="row mb-2">
+                    @Html.LabelFor(model => model.SalarioBase, htmlAttributes: new { @class = "cell-sm-2" })
+                    <div class="cell-sm-10 no-gutters">
+                        <div class="cell-sm-3">
+                            @Html.EditorFor(model => model.SalarioBase, new { htmlAttributes = new { } })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.SalarioBase, "", new { @class = "fg-red" })
+                    </div>
+                </div>
+
+                <div class="row mb-2">
+                    @Html.LabelFor(model => model.Comissao, htmlAttributes: new { @class = "cell-sm-2" })
+                    <div class="cell-sm-10 no-gutters">
+                        <div class="cell-sm-3">
+                            @Html.EditorFor(model => model.Comissao, new { htmlAttributes = new { } })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.Comissao, "", new { @class = "fg-red" })
+                    </div>
+                </div>
+
+                <div class="row mb-2">
+                    @Html.LabelFor(model => model.DataDesligamento, htmlAttributes: new { @class = "cell-sm-2" })
+                    <div class="cell-sm-10 no-gutters">
+                        <div class="cell-sm-3">
+                            @Html.TextBoxFor(model => model.DataDesligamento, new { data_role = "calendarpicker", data_input_format = "%d/%m/%Y", data_format = "%d/%m/%Y" })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.DataDesligamento, "", new { @class = "fg-red" })
+                    </div>
+                </div>
+            </div>
+            <div id="tab5" class="border bd-default no-border-top p-2">
+                <div class="row mb-2">
+                    @Html.LabelFor(model => model.Observacao, htmlAttributes: new { @class = "cell-sm-2" })
+                    <div class="cell-sm-10 no-gutters">
+                        <div class="cell-sm-3">
+                            @Html.TextAreaFor(model => model.Observacao, new { data_role = "textarea", rows = "6" })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.Observacao, "", new { @class = "fg-red" })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-2">
+        <div class="offset-sm-2 cell-sm-10">
+            <div class="cell">
+                <button type="submit" class="button primary">Salvar</button>
+                <a class="button link" href="@Url.Action("Vendedores", "Cadastros")">Cancelar</a>
+            </div>
+        </div>
+    </div>
+}
+
+@section scripts
+{
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/masked")
+    @Scripts.Render("~/bundles/maskmoney")
+    <script>
+        $(function () {
+            $("#Cpf").mask('000.000.000-00', { reverse: true });
+            $("#Cep").mask('00000-000');
+
+            $("#Telefone").mask('(00) 0000-0000');
+            $("#Celular").mask('(00) 00000-0000');
+
+            $("#SalarioBase, #Comissao").maskMoney({
+                thousands: '',
+                decimal: ',',
+                allowZero: false
+            });
+
+            $("input[type='radio'][name='TipoPessoa']").on('change',
+                function () {
+                    if (this.value == 'F') {
+                        $("#Documento").mask('000.000.000-00', { reverse: true });
+                    } else {
+                        $("#Documento").mask('00.000.000/0000-00', { reverse: true });
+                    }
+                });
+
+            $("#Cep").on('change',
+                function() {
+                    var vlr = $(this).val();
+
+                    $.ajax({
+                        url: '@Url.Action("buscarcep", "base")',
+                        data: { cep: vlr },
+                        dataType: 'JSON',
+                        success: function(data) {
+                            $("#Endereco").val(data['logradouro']);
+                            $("#Bairro").val(data['bairro']);
+                            $("#Cidade").val(data['localidade']);
+                            $("#Uf").val(data['uf']);
+                            var sel = $("#Uf").data('select');
+                            sel.val(data['uf']);
+                            $("#Numero").focus();
+                        }
+                    });
+
+                });
+        });
+    </script>
+}

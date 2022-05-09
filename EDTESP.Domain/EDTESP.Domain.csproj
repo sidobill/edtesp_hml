@@ -1,0 +1,104 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{8707BE77-DDD2-4B82-8F81-E276EB38E5D3}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>EDTESP.Domain</RootNamespace>
+    <AssemblyName>EDTESP.Domain</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Entities\Boleto.cs" />
+    <Compile Include="Entities\Cargo.cs" />
+    <Compile Include="Entities\Cliente.cs" />
+    <Compile Include="Entities\ClienteBraslink.cs" />
+    <Compile Include="Entities\CondicaoPagamento.cs" />
+    <Compile Include="Entities\Contrato.cs" />
+    <Compile Include="Entities\ContratoEvento.cs" />
+    <Compile Include="Entities\Edtesp\ClassificadosEdtesp.cs" />
+    <Compile Include="Entities\Edtesp\ClientesEdtesp.cs" />
+    <Compile Include="Entities\Empresa.cs" />
+    <Compile Include="Entities\Feriado.cs" />
+    <Compile Include="Entities\FormaCondicaoPagamento.cs" />
+    <Compile Include="Entities\FormaPagamento.cs" />
+    <Compile Include="Entities\GrupoUsuario.cs" />
+    <Compile Include="Entities\MotivoSuspensao.cs" />
+    <Compile Include="Entities\Parametro.cs" />
+    <Compile Include="Entities\ParametroBanco.cs" />
+    <Compile Include="Entities\PerfilUsuario.cs" />
+    <Compile Include="Entities\Permissao.cs" />
+    <Compile Include="Entities\PermissaoGrupoUsuario.cs" />
+    <Compile Include="Entities\PermissaoUsuario.cs" />
+    <Compile Include="Entities\Produto.cs" />
+    <Compile Include="Entities\Relatorios\AdiantamentoSalarial.cs" />
+    <Compile Include="Entities\Relatorios\CobrancaCliente.cs" />
+    <Compile Include="Entities\Relatorios\ComissaoIndividual.cs" />
+    <Compile Include="Entities\Relatorios\EstornoComissao.cs" />
+    <Compile Include="Entities\Relatorios\ResumoVendaGeral.cs" />
+    <Compile Include="Entities\Relatorios\ResumoVendaRepresentante.cs" />
+    <Compile Include="Entities\Remessa.cs" />
+    <Compile Include="Entities\Setor.cs" />
+    <Compile Include="Entities\Status.cs" />
+    <Compile Include="Entities\StatusContrato.cs" />
+    <Compile Include="Entities\StatusVendedor.cs" />
+    <Compile Include="Entities\Time.cs" />
+    <Compile Include="Entities\TipoBaixa.cs" />
+    <Compile Include="Entities\Titulo.cs" />
+    <Compile Include="Entities\Usuario.cs" />
+    <Compile Include="Entities\Vendedor.cs" />
+    <Compile Include="Entities\VendedorAlcada.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\IAdiantamentoSalarialRepository.cs" />
+    <Compile Include="Repositories\IClienteBraslinkRepository.cs" />
+    <Compile Include="Repositories\ICobrancaClienteRepository.cs" />
+    <Compile Include="Repositories\IComissaoIndividualRepository.cs" />
+    <Compile Include="Repositories\ICondicaoPagamentoRepository.cs" />
+    <Compile Include="Repositories\IEstornoComissaoRepository.cs" />
+    <Compile Include="Repositories\IGrupoUsuarioRepository.cs" />
+    <Compile Include="Repositories\IEdtespRepositoryBase.cs" />
+    <Compile Include="Repositories\IRepositoryBase.cs" />
+    <Compile Include="Repositories\IResumoVendaGeralRepository.cs" />
+    <Compile Include="Repositories\IResumoVendaRepresentanteRepository.cs" />
+    <Compile Include="Repositories\IUnitOfWork.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Services\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

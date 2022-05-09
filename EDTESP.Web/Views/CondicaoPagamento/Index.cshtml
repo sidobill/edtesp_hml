@@ -1,0 +1,73 @@
+﻿@using PagedList.Mvc
+@model PagedList.IPagedList<EDTESP.Web.ViewModels.Cadastros.CondicaoPagamentoViewModel>
+
+@{
+    ViewBag.Title = "Condições de pagamento";
+    ViewBag.SubTitle = $"<a class=\"button primary\" href=\"{Url.Action("NovaCondicao","Cadastros")}\">Novo</a>";
+}
+<div class="mb-2">
+    @Html.Partial("_busca")
+</div>
+<div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.FirstOrDefault().CondicaoPagamentoId)</th>
+                <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Descricao)</th>
+                <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Modelo)</th>
+                <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Formas)</th>
+                <th>@Html.DisplayNameFor(model => model.FirstOrDefault().UsuarioCriador)</th>
+                <th>@Html.DisplayNameFor(model => model.FirstOrDefault().DataCadastro)</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        @if (Model.Any())
+        {
+            foreach (var item in Model)
+            {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.CondicaoPagamentoId)</td>
+                <td>@Html.DisplayFor(modelItem => item.Descricao)</td>
+                <td>@Html.DisplayFor(modelItem => item.Modelo)</td>
+                <td>@Html.DisplayFor(modelItem => item.Formas)</td>
+                <td>@Html.DisplayFor(modelItem => item.UsuarioCriador)</td>
+                <td>@Html.DisplayFor(modelItem => item.DataCadastro)</td>
+                <td>
+                    <div class="toolbar">
+                        <a class="tool-button yellow" href="@Url.Action("EditarCondicao", "Cadastros", new {id = item.CondicaoPagamentoId})">
+                            <span class="mif-pencil"></span>
+                        </a>
+                        <button class="tool-button alert btnRem" data-id="@item.CondicaoPagamentoId">
+                            <span class="mif-cross"></span>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="6" class="text-center">Sem resultados</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>
+<div class="">
+    @Html.Partial("_Paginacao")
+</div>
+
+@section scripts
+{
+    <script type="text/javascript">
+        $(function() {
+            $(".btnRem").on('click',
+                function() {
+                    var cid = $(this).data('id');
+                    showConfirm('@Url.Action("RemoverCondicao", "Cadastros")', cid);
+                });
+        });
+    </script>
+}

@@ -1,0 +1,58 @@
+﻿@using EDTESP.Web.Helpers
+@model IEnumerable<EDTESP.Web.ViewModels.Financeiro.TituloViewModel>
+<table class="table table-hover table-striped table-sm" >
+    <thead>
+        <tr>
+            <th></th>
+            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().TituloId)</th>
+            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().DataCriacao)</th>
+            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Contrato)</th>
+            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Cliente)</th>
+            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().FormaPagamento)</th>
+            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().CondicaoPagamento)</th>
+            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().DataVencto)</th>
+            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().DataVenctoReal)</th>
+            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Valor)</th>
+            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Saldo)</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+    @if (Model.Any())
+    {
+        foreach (var item in Model)
+        {
+        <tr>
+            @if(item.FormaPagamento.ToUpper() == "BOLETO" && item.UltimoBoleto != null)
+            {
+                <td><input type="checkbox" data-role="checkbox" name="boletoId" data-id="@item.UltimoBoleto.BoletoId" /></td>
+            }
+            else
+            {
+                <td></td>
+            }
+
+            <td>@Html.DisplayFor(modelItem => item.TituloId)</td>
+            <td>@Html.DisplayFor(modelItem => item.DataCriacao)</td>
+            <td>@Html.DisplayFor(modelItem => item.Contrato)</td>
+            <td>@Html.DisplayFor(modelItem => item.Cliente)</td>
+            <td>@Html.DisplayFor(modelItem => item.FormaPagamento)</td>
+            <td>@Html.DisplayFor(modelItem => item.CondicaoPagamento)</td>
+            <td>@Html.DisplayFor(modelItem => item.DataVencto)</td>
+            <td>@Html.DisplayFor(modelItem => item.DataVenctoReal)</td>
+            <td>@Html.DisplayFor(modelItem => item.Valor)</td>
+            <td>@Html.DisplayFor(modelItem => item.Saldo)</td>
+            <td>
+                @Html.MostraOptsTitulo(item)
+            </td>
+        </tr>
+        }
+    }
+    else
+    {
+        <tr>
+            <td colspan="9" class="text-center">Sem resultados</td>
+        </tr>
+    }
+    </tbody>
+</table>

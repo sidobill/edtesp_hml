@@ -1,0 +1,224 @@
+﻿@model IEnumerable<EDTESP.Web.ViewModels.Relatorios.CobrancaClienteViewModel>
+
+@using (Html.BeginForm("CobrancaCliente", "Relatorios"))
+{
+    <div class="mb-2">
+        Cliente:
+        @Html.DropDownList("clienteId", null, new { @class = "mb-2" })
+        Vendedor:
+        @Html.DropDownList("vendedorId", null, new { @class = "mb-2" })
+        <div class="inline-form mb-2 input-daterange">
+            <label>Data de Criação De</label>
+            <input type="text" name="emiini" id="dtIni" value="@ViewBag.Ini" autocomplete="off">
+            <label> Até </label>
+            <input type="text" name="emifim" id="dtFim" value="@ViewBag.Fim" autocomplete="off">
+        </div>
+
+        <div class="mb-2">
+            <button type="submit" class="button primary">Buscar</button>
+            <button type="button" class="button secondary" onclick="window.location.href=''">Limpar</button>
+
+            @if (Model != null && Model.Any())
+            {
+                <button type="button" class="tool-button button bg-gray" title="Exportar p/ PDF" onclick="export2Pdf(this)">
+                    <span class="mif-file-pdf"></span>
+                </button>
+            }
+        </div>
+    </div>
+}
+
+@if (Model != null && Model.Any())
+{
+    <div class="row">
+        <div class="cell-12">
+            <form method="post" action="/Relatorios/ExportarExcel">
+                <input type="hidden" name="cliente" />
+                <input type="hidden" name="vendedor" />
+                <input type="hidden" name="emisIni" />
+                <input type="hidden" name="emisFim" />
+
+                <button type="submit" class="button success" onclick="preecherCampos()">Exportar excel</button>
+
+
+            </form>
+
+            <button class="button success" onclick="efetuarDowloadPdfCustomizado()">Exportar PDF</button>
+        </div>
+    </div>
+}
+
+<div class="row">
+    <div class="cell-12">
+        <table class="table table-hover table-striped table-sm" id="tblRel">
+            <thead>
+                <tr>
+                    <td>Contrato</td>
+                    <td>Cliente</td>
+                    <td>CPF/CNPJ</td>
+                    <td>Endereço</td>
+                    <td>Bairro</td>
+                    <td>Cidade</td>
+                    <td>CEP</td>
+                    <td>Responsável</td>
+                    <td>Telefone</td>
+                    <td>Representante</td>
+                    <td>Nº parcela</td>
+                    <td>Vencimento</td>
+                    <td>Valor</td>
+                    <td>Status</td>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.Any())
+                {
+                    foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.Numero</td>
+                            <td>@item.RazaoSocial</td>
+                            <td>@item.Documento</td>
+                            <td>@item.EnderecoCobr</td>
+                            <td>@item.BairroCobr</td>
+                            <td>@item.CidadeCobr</td>
+                            <td>@item.CepCobr</td>
+                            <td>@item.Responsavel</td>
+                            <td>@item.Telefone</td>
+                            <td>@item.Vendedor</td>
+                            <td>@item.Parcela/@item.QuantidadeTotalParcela</td>
+                            <td>@item.DataVenctoReal.ToString("dd/MM/yyyy")</td>
+                            <td>@item.ValorParcela.ToString("n2")</td>
+
+                            @if (item.DataVenctoReal.Date < DateTime.Now.Date)
+                            {
+                                <td>Atrasado</td>
+                            }
+                            else
+                            {
+                                <td>Normal</td>
+                            }
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="11" class="text-center">Sem resultados</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section styles
+{
+    @Styles.Render("~/content/dt")
+    @Styles.Render("~/scripts/datatables/buttons/css/buttons.datatables.css")
+    @Styles.Render("~/content/bdp")
+    @Styles.Render("~/content/third-party/select2.css")
+}
+
+@section scripts
+{
+    @Scripts.Render("~/bundles/maskmoney")
+    @Scripts.Render("~/bundles/numeral")
+    @Scripts.Render("~/scripts/dateformat.js")
+    @Scripts.Render("~/scripts/jquery.fileDownload.js")
+    @Scripts.Render("~/bundles/masked")
+    @Scripts.Render("~/bundles/bdp")
+    @Scripts.Render("~/bundles/select2")
+    @Scripts.Render("~/scripts/datatables/jszip/jszip.js")
+    @Scripts.Render("~/scripts/datatables/buttons/js/datatables.buttons.js")
+    @Scripts.Render("~/scripts/datatables/pdfmake/pdfmake.js")
+    @Scripts.Render("~/scripts/datatables/pdfmake/vfs_fonts.js")
+    @Scripts.Render("~/scripts/datatables/buttons/js/buttons.html5.js")
+    @Scripts.Render("~/js/Utils.js")
+
+    <script type="text/javascript">
+    var table;
+
+    $(function () {
+        $('.input-daterange').datepicker({
+            language: 'pt-BR',
+            autoclose: true
+        });
+
+        $("#dtIni, #dtFim").mask("99/99/9999");
+
+        var dataInicial = $("#dtIni").val();
+        var dataFinal = $("#dtFim").val();
+        var cliente = $("#clienteId option:selected").text();
+        var vendedor = $("#vendedorId option:selected").text();
+
+        if (cliente == "Selecione...") {
+            cliente = "Todos";
+        }
+
+        if (vendedor == "Selecione...") {
+            vendedor = "Todos";
+        }
+
+        var resultado = "Cliente: " + cliente + "|Vendedor: " + vendedor;
+
+        var titulo = formatTitleReport(dataInicial, dataFinal, "Cobrança cliente", resultado);
+
+        table = $("#tblRel").DataTable({
+            searching: false,
+            dom: 'frtip',
+            buttons: [
+                {
+                    extend: 'pdfHtml5',
+                    text: 'Exportar p/ PDF',
+                    classname: 'button bg-gray',
+                    orientation: 'landscape',
+                    pageSize: 'LEGAL',
+                    title: titulo,
+                    filename: 'CobrancaCliente'
+                }
+            ],
+            language: {
+                url: '@Url.Content("~/scripts/datatables/datatables.pt-br.json")'
+            }
+        });
+    });
+
+    function export2Pdf() {
+        table.button(0).trigger();
+    }
+
+    function preecherCampos() {
+        var dataInicial = $("#dtIni").val();
+        var dataFinal = $("#dtFim").val();
+        var cliente = $("#clienteId").val();
+        var vendedor = $("#vendedorId").val();
+
+        if (cliente == "") {
+            cliente = "0";
+        }
+
+        if (vendedor == "") {
+            vendedor = "0";
+        }
+
+        $("input[name='cliente']").val(cliente);
+        $("input[name='vendedor']").val(vendedor);
+        $("input[name='emisIni']").val(dataInicial);
+        $("input[name='emisFim']").val(dataFinal);
+    }
+
+        function efetuarDowloadPdfCustomizado() {
+            var dataInicial = $("#dtIni").val();
+            var dataFinal = $("#dtFim").val();
+            var cliente = $("#clienteId").val();
+            var vendedor = $("#vendedorId").val();
+
+            var url = '@Url.Action("RetornarPdfCobrancaClienteIndividual", "Relatorios", null, Request.Url.Scheme)?cliente=' + cliente + '&emisIni=' + dataInicial + '&emisFim=' + dataFinal + '&vendedor=' + vendedor;
+            $.fileDownload(url, {});
+        }
+    </script>
+}
+
+
+
+

@@ -1,0 +1,811 @@
+﻿@using EDTESP.Web.Helpers
+@using PagedList.Mvc
+@model PagedList.IPagedList<EDTESP.Web.ViewModels.Operacoes.ContratoViewModel>
+
+@{
+    var stt = ViewBag.Status;
+
+    ViewBag.Title = $"Contratos {stt}";
+}
+<div class="mb-2">
+    <p class="small">Busque por Numero do Contrato, Nome do Cliente, CPF/CNPJ do Cliente, Vendedor, Descrição do produto ou Categoria do produto </p>
+    @Html.Partial("_busca_data")
+</div>
+<div class="">
+    <table class="table table-hover table-striped table-sm">
+        <thead>
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Numero)</th>
+                <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Cliente)</th>
+                <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Vendedor)</th>
+                <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Produtos)</th>
+                <th>@Html.DisplayNameFor(model => model.FirstOrDefault().DataCriacao)</th>
+                <th>@Html.DisplayNameFor(model => model.FirstOrDefault().StatusContrato)</th>
+                <th>@Html.DisplayNameFor(model => model.FirstOrDefault().DataUltimaSituacao)</th>
+
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Any())
+            {
+                foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => item.Numero)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Cliente)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Vendedor)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Descricao)</td>
+                        <td>@Html.DisplayFor(modelItem => item.DataCriacao)</td>
+                        <td>@Html.DisplayFor(modelItem => item.StatusContrato)</td>
+                        <td>@Html.DisplayFor(modelItem => item.DataUltimaSituacao)</td>
+                        <td>@Html.MostraOptsContrato(item)</td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="8" class="text-center">Sem resultados</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<div class="">
+    @Html.Partial("_Paginacao")
+</div>
+
+@section styles
+{
+    @Styles.Render("~/content/third-party/datatables.css")
+    @Styles.Render("~/content/bdp")
+    @Styles.Render("~/content/third-party/select2.css")
+}
+
+@section scripts
+{
+    @Scripts.Render("~/bundles/maskmoney")
+    @Scripts.Render("~/bundles/numeral")
+    @Scripts.Render("~/scripts/dateformat.js")
+    @Scripts.Render("~/scripts/jquery.fileDownload.js")
+    @Scripts.Render("~/bundles/masked")
+    @Scripts.Render("~/bundles/bdp")
+    @Scripts.Render("~/bundles/select2")
+    <script type="text/javascript">
+        $(function() {
+            //$("#dtIni, #dtFim").datepicker({
+            //    language: 'pt-BR'
+            //});
+
+            $('.input-daterange').datepicker({
+                language: 'pt-BR',
+                autoclose: true
+            });
+
+            $("#dtIni, #dtFim").mask("99/99/9999");
+
+
+            $(".btnv").on('click',
+                function() {
+                    var cid = $(this).data('id');
+
+                    $.ajax({
+                        url: '@Url.Action("Ver", "Contratos")',
+                        data: { contratoId: cid },
+                        type: 'GET',
+                        beforeSend: function() {
+                            showActivity();
+                        },
+                        success: function(data) {
+                            closeActivity();
+                            Metro.dialog.create({
+                                title: 'Dados do Contrato',
+                                clsDialog: 'w-75',
+                                clsTitle: 'bg-gray',
+                                clsContent: 'overflow',
+                                content: data
+                            });
+
+                            $("#tblHst").DataTable({
+                                lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, "Todos"]],
+                                language: {
+                                    url: '@Url.Content("~/scripts/datatables/datatables.pt-br.json")'
+                                }
+                            });
+                        },
+                        error: function(x, s, e) {
+                            closeActivity();
+                            showError('Erro', 'Erro ao executar operação');
+                            console.log(e);
+                        }
+                    });
+                });
+
+            $(".btnAprv").on('click',
+                function() {
+                    var cid = $(this).data('id');
+                    showAprova(cid);
+                });
+
+            $(".btnRepr").on('click',
+                function() {
+                    var cid = $(this).data('id');
+                    showReprova(cid);
+                });
+
+            $(".btnDown").on('click',
+                function() {
+                    var cid = $(this).data('id');
+                    var url = '@Url.Action("ViaContrato", "Contratos", null, Request.Url.Scheme)?contratoId=' + cid;
+                    $.fileDownload(url, {});
+                });
+
+            $(".btnEmail").on('click',
+                function() {
+                    var cid = $(this).data('id');
+                    var url = '@Url.Action("EnviarContrato", "Contratos", null, Request.Url.Scheme)';
+
+                    $.ajax({
+                        url: url,
+                        data: { id: cid },
+                        dataType: 'JSON',
+                        beforeSend: function() {
+                            showActivity();
+                        },
+                        success: function(data) {
+                            if (data.error) {
+                                showError('Erro', data.msg);
+                                return;
+                            }
+
+                            closeActivity();
+                            showNotificationInfo('E-mail enviado com sucesso!', 'Sucesso');
+                        },
+                        error: function(x, s, e) {
+                            showError('Erro', 'Erro ao executar operação');
+                            console.log(e);
+                        }
+                    });
+                });
+
+            $(".btnSusp").on('click',
+                function() {
+                    var cid = $(this).data('id');
+
+                    var content = '<div class="row">' +
+                        '<div class="cell-12"><label for="motivoid">Motivo</label><select name="motivoId" id="motivoId"></select></div>' +
+                        '<div class="cell-12"><label for="obs">Observação</label><textarea name="obs" id="obs" data-role="textarea"></textarea></div>' +
+                        '</div>';
+
+
+                    Metro.dialog.create({
+                        title: 'Suspender Contrato',
+                        clsDialog: '',
+                        clsTitle: 'bg-orange fg-light',
+                        clsContent: 'overflow',
+                        content: content,
+                        actions: [
+                            {
+                                caption: 'Confirmar',
+                                cls: 'alert',
+                                onclick: function(dlg) {
+                                    var mid = $("#motivoId").val();
+                                    var obser = $("#obs").val();
+
+                                    if (mid == undefined || mid == '') {
+                                        return false;
+                                    }
+
+                                    $.ajax({
+                                        url: '@Url.Action("Suspender", "Contratos")',
+                                        type: 'POST',
+                                        data: { contratoId: cid, motivoId: mid, obs: obser },
+                                        dataType: 'JSON',
+                                        success: function(data) {
+                                            if (data.error) {
+                                                showError('Erro', 'Erro ao executar operação');
+                                                console.log(data.msg);
+                                                return;
+                                            }
+
+                                            window.location.reload();
+                                        }
+                                    });
+
+                                    Metro.dialog.close(dlg);
+                                }
+                            },
+                            {
+                                caption: 'Cancelar',
+                                cls: 'success js-dialog-close'
+                            }
+                        ],
+                        onOpen: function() {
+                            $.ajax({
+                                url: '@Url.Action("ObterMotivosSuspensao", "Contratos")',
+                                dataType: 'JSON',
+                                success: function(data) {
+                                    if (data.error) {
+                                        showError('Erro', 'Erro ao obter dados');
+                                        console.log(data.msg);
+                                        return;
+                                    }
+
+                                    var select = $("#motivoId");
+                                    var opt = $('<option></option>');
+                                    opt.attr('value', '');
+                                    opt.attr('disabled', 'disabled');
+                                    opt.attr('selected', 'selected');
+                                    opt.text('Selecione');
+                                    opt.appendTo(select);
+
+                                    $.each(data.dados,
+                                        function(i, item) {
+                                            var opt = $('<option></option>');
+                                            opt.attr('value', item.MotivoSuspensaoId);
+                                            opt.text(item.Descricao);
+                                            opt.appendTo(select);
+                                        });
+                                }
+                            });
+                        }
+                    });
+                });
+
+            $(".btnCart").on('click',
+                function () {
+                    var cid = $(this).data('id');
+
+                    var div = $("<div></div>");
+
+                    var btn = $("<button></button>");
+                    btn.attr('id', 'btnCancM1');
+                    btn.addClass("command-button w-100 mb-1 warning");
+                    btn.append('<span class="mif-file-empty icon"></span> ');
+                    btn.append('<span class="caption">Cancelamento (Modelo 1)<small>Carta de Cancelamento Geral da Renovação</small></span>');
+                    btn.appendTo(div);
+
+                    btn = $("<button></button>");
+                    btn.attr('id', 'btnCancM2');
+                    btn.addClass("command-button w-100 mb-1 warning");
+                    btn.append('<span class="mif-file-empty icon"></span> ');
+                    btn.append('<span class="caption">Cancelamento (Modelo 2)<small>Carta de Cancelamento Total e Geral</small></span>');
+                    btn.appendTo(div);
+
+                    btn = $("<button></button>");
+                    btn.attr('id', 'btnCancM3');
+                    btn.addClass("command-button w-100 mb-1 warning");
+                    btn.append('<span class="mif-file-empty icon"></span> ');
+                    btn.append('<span class="caption">Cancelamento (Modelo 3)<small>Rescisão (Instrumento)</small></span>');
+                    btn.appendTo(div);
+
+                    btn = $("<button></button>");
+                    btn.attr('id', 'btnCobrM4');
+                    btn.addClass("command-button w-100 mb-1 warning");
+                    btn.append('<span class="mif-file-empty icon"></span> ');
+                    btn.append('<span class="caption">Cancelamento (Modelo 4)<small>Carta Vinculada de Cancelamento</small></span>');
+                    btn.appendTo(div);
+
+                    btn = $("<button></button>");
+                    btn.attr('id', 'btnCobr');
+                    btn.addClass("command-button w-100 mb-1 alert");
+                    btn.append('<span class="mif-file-empty icon"></span> ');
+                    btn.append('<span class="caption">Cobrança (Modelo 1)<small>Cobrança Extrajudicial</small></span>');
+                    btn.appendTo(div);
+
+                    var htmlOpcaoes = "<br/>Núm. Contrato: <input type='text' id='txtNumeroContratoCarta' maxlength='20' /><br/>Envia cancelamento por e-mail:<input type='checkbox' id='chkEnviaEmailCarta' />";
+
+                    Metro.dialog.create({
+                        title: 'Impressao Diversos',
+                        content: div.html() + htmlOpcaoes,
+                        clsTitle: 'bg-yellow fg-dark',
+                        actions: [
+                            {
+                                caption: 'Fechar',
+                                cls: 'secondary js-dialog-close'
+                            }
+                        ],
+                        onOpen: function () {
+                            $("#btnCancM1").on('click',
+                                function () {
+                                    var ckEnviaEmail = $("#chkEnviaEmailCarta").is(":checked");
+
+                                    if (!ckEnviaEmail) {
+                                        var url = '@Url.Action("CancelamentoModelo1", "Contratos", null, Request.Url.Scheme)?contratoId=' + cid + '&numContrato=' + $("#txtNumeroContratoCarta").val();
+                                        $.fileDownload(url, {});
+                                    }
+                                    else {
+                                        $.ajax({
+                                            url: '@Url.Action("EnviarEmailModeloCancelamentoUm", "Contratos")',
+                                            data: { contratoId: cid, numContrato: $("#txtNumeroContratoCarta").val() },
+                                            type: 'POST',
+                                            dataType: 'JSON',
+                                            success: function (data) {
+                                                if (!data.error) {
+                                                    showInfo('Sucesso', 'Carta de cancelamento modelo 1 enviado por e-mail com sucesso');
+                                                } else {
+                                                    showError('Erro', data.msg);
+                                                }
+                                            },
+                                            error: function (x, s, e) {
+                                                showError('Erro', 'Erro ao executar operação');
+                                            }
+                                        });
+                                    }
+                                });
+
+                            $("#btnCancM2").on('click',
+                                function () {
+                                    var ckEnviaEmail = $("#chkEnviaEmailCarta").is(":checked");
+
+                                    if (!ckEnviaEmail) {
+                                        var url = '@Url.Action("CancelamentoModelo2", "Contratos", null, Request.Url.Scheme)?contratoId=' + cid + '&numContrato=' + $("#txtNumeroContratoCarta").val();
+                                        $.fileDownload(url, {});
+                                    }
+                                    else {
+                                        $.ajax({
+                                            url: '@Url.Action("EnviarEmailModeloCancelamentoDois", "Contratos")',
+                                            data: { contratoId: cid, numContrato: $("#txtNumeroContratoCarta").val() },
+                                            type: 'POST',
+                                            dataType: 'JSON',
+                                            success: function (data) {
+                                                if (!data.error) {
+                                                    showInfo('Sucesso', 'Carta de cancelamento modelo 2 enviado por e-mail com sucesso');
+                                                } else {
+                                                    showError('Erro', data.msg);
+                                                }
+                                            },
+                                            error: function (x, s, e) {
+                                                showError('Erro', 'Erro ao executar operação');
+                                            }
+                                        });
+                                    }
+                                });
+
+                            $("#btnCancM3").on('click',
+                                function () {
+                                    var ckEnviaEmail = $("#chkEnviaEmailCarta").is(":checked");
+
+                                    if (!ckEnviaEmail) {
+                                        var url = '@Url.Action("CancelamentoModelo3", "Contratos", null, Request.Url.Scheme)?contratoId=' + cid + '&numContrato=' + $("#txtNumeroContratoCarta").val();
+                                        $.fileDownload(url, {});
+                                    }
+                                    else {
+                                        $.ajax({
+                                            url: '@Url.Action("EnviarEmailModeloCancelamentoTres", "Contratos")',
+                                            data: { contratoId: cid, numContrato: $("#txtNumeroContratoCarta").val() },
+                                            type: 'POST',
+                                            dataType: 'JSON',
+                                            success: function (data) {
+                                                if (!data.error) {
+                                                    showInfo('Sucesso', 'Carta de cancelamento modelo 3 enviado por e-mail com sucesso');
+                                                } else {
+                                                    showError('Erro', data.msg);
+                                                }
+                                            },
+                                            error: function (x, s, e) {
+                                                showError('Erro', 'Erro ao executar operação');
+                                            }
+                                        });
+                                    }
+                                });
+
+                            $("#btnCobrM4").on('click',
+                                function () {
+                                    var ckEnviaEmail = $("#chkEnviaEmailCarta").is(":checked");
+
+                                    if (!ckEnviaEmail) {
+                                        var url = '@Url.Action("CancelamentoModelo4", "Contratos", null, Request.Url.Scheme)?contratoId=' + cid + '&numContrato=' + $("#txtNumeroContratoCarta").val();
+                                        $.fileDownload(url, {});
+                                    }
+                                    else {
+                                        $.ajax({
+                                            url: '@Url.Action("EnviarEmailModeloCancelamentoQuatro", "Contratos")',
+                                            data: { contratoId: cid, numContrato: $("#txtNumeroContratoCarta").val() },
+                                            type: 'POST',
+                                            dataType: 'JSON',
+                                            success: function (data) {
+                                                if (!data.error) {
+                                                    showInfo('Sucesso', 'Carta de cancelamento modelo 4 enviado por e-mail com sucesso');
+                                                } else {
+                                                    showError('Erro', data.msg);
+                                                }
+                                            },
+                                            error: function (x, s, e) {
+                                                showError('Erro', 'Erro ao executar operação');
+                                            }
+                                        });
+                                    }
+                                });
+
+                            $("#btnCobr").on('click',
+                                function () {
+                                    var ckEnviaEmail = $("#chkEnviaEmailCarta").is(":checked");
+
+                                    if (!ckEnviaEmail) {
+                                        var url = '@Url.Action("CartaCobranca", "Contratos", null, Request.Url.Scheme)?contratoId=' + cid + '&numContrato=' + $("#txtNumeroContratoCarta").val();
+                                        $.fileDownload(url, {});
+                                    }
+                                    else {
+                                        $.ajax({
+                                            url: '@Url.Action("EnviarEmailModeloCartaCobranca", "Contratos")',
+                                            data: { contratoId: cid, numContrato: $("#txtNumeroContratoCarta").val() },
+                                            type: 'POST',
+                                            dataType: 'JSON',
+                                            success: function (data) {
+                                                if (!data.error) {
+                                                    showInfo('Sucesso', 'Carta de cobrança enviado por e-mail com sucesso');
+                                                } else {
+                                                    showError('Erro', data.msg);
+                                                }
+                                            },
+                                            error: function (x, s, e) {
+                                                showError('Erro', 'Erro ao executar operação');
+                                            }
+                                        });
+                                    }
+                                });
+                        }
+                    });
+                });
+
+            $(".btnReap").on('click',
+                function () {
+                    var hr = $(this).data('href');
+                    window.location.href = hr;
+                });
+
+            function showAprova(iditem) {
+                Metro.dialog.create({
+                    title: 'Confirma a acão?',
+                    clsTitle: 'bg-darkBlue fg-white',
+                    content: 'Tem certeza que deseja Aprovar? <br/>' +
+                        '<input type="checkbox" id="chkEnvEml" data-role="switch" data-caption="Enviar por E-mail ao cliente" checked="">',
+                    actions: [
+                        {
+                            caption: 'Sim',
+                            cls: 'alert js-dialog-close',
+                            onclick: function() {
+                                var envia = $("#chkEnvEml").prop('checked');
+
+                                $.ajax({
+                                    url: '@Url.Action("AprovarContrato", "Contratos")',
+                                    data: { id: iditem, enviaEmail: envia },
+                                    type: 'POST',
+                                    dataType: 'JSON',
+                                    success: function(data) {
+                                        if (!data.error) {
+                                            $.fileDownload(data.url, {});
+                                            showInfo('Sucesso',
+                                                'Contrato aprovado com sucesso, aguarde o download do contrato',
+                                                function() {
+                                                    window.location.reload();
+                                                });
+                                        } else {
+                                            showError('Erro', data.msg);
+                                        }
+                                    },
+                                    error: function(x, s, e) {
+                                        showError('Erro', 'Erro ao executar operação');
+                                        console.log(e);
+                                    }
+                                });
+                            }
+                        },
+                        {
+                            caption: 'Não',
+                            cls: 'success js-dialog-close'
+                        }
+                    ]
+                });
+
+            }
+
+            function showReprova(iditem) {
+                Metro.dialog.create({
+                    title: 'Confirma a acão?',
+                    clsTitle: 'bg-crimson fg-white',
+                    content: 'Tem certeza que deseja Reprovar?',
+                    actions: [
+                        {
+                            caption: 'Sim',
+                            cls: 'alert js-dialog-close',
+                            onclick: function() {
+                                $.ajax({
+                                    url: '@Url.Action("ReprovarContrato", "Contratos")',
+                                    data: { id: iditem },
+                                    type: 'POST',
+                                    dataType: 'JSON',
+                                    success: function(data) {
+                                        if (!data.error) {
+                                            window.location.reload();
+                                        } else {
+                                            showError('Erro', data.msg);
+                                        }
+                                    },
+                                    error: function(x, s, e) {
+                                        showError('Erro', 'Erro ao executar operação');
+                                        console.log(e);
+                                    }
+                                });
+                            }
+                        },
+                        {
+                            caption: 'Não',
+                            cls: 'success js-dialog-close'
+                        }
+                    ]
+                });
+
+            }
+
+            $(".btnExc").on("click", function () {
+                var cid = $(this).data('id');
+
+                showDeleteContract(cid);
+            });
+
+            function showDeleteContract(iditem) {
+                Metro.dialog.create({
+                    title: 'Confirma a acão?',
+                    clsTitle: 'bg-crimson fg-white',
+                    content: 'Tem certeza que deseja excluir?',
+                    actions: [
+                        {
+                            caption: 'Sim',
+                            cls: 'alert js-dialog-close',
+                            onclick: function () {
+                                $.ajax({
+                                    url: '@Url.Action("DeleteContract", "Contratos")',
+                                    data: { id: iditem },
+                                    type: 'POST',
+                                    dataType: 'JSON',
+                                    success: function (data) {
+                                        if (!data.error) {
+                                            window.location.reload();
+                                        } else {
+                                            showError('Erro', data.msg);
+                                        }
+                                    },
+                                    error: function (x, s, e) {
+                                        showError('Erro', 'Erro ao executar operação');
+                                        console.log(e);
+                                    }
+                                });
+                            }
+                        },
+                        {
+                            caption: 'Não',
+                            cls: 'success js-dialog-close'
+                        }
+                    ]
+                });
+            }
+
+            $(".btnVoltarSuspenso").on("click", function () {
+                var cid = $(this).data('id');
+
+                showConfirmationToBackApprove(cid);
+            });
+
+            function showConfirmationToBackApprove(idItem) {
+                Metro.dialog.create({
+                    title: 'Confirmar a acão',
+                    clsTitle: 'bg-crimson fg-white',
+                    content: 'Tem certeza que deseja voltar o contrato para aprovado?',
+                    actions: [
+                        {
+                            caption: 'Sim',
+                            cls: 'alert js-dialog-close',
+                            onclick: function () {
+                                $.ajax({
+                                    url: '@Url.Action("VoltarSuspenso", "Contratos")',
+                                    data: { id: idItem },
+                                    type: 'POST',
+                                    dataType: 'JSON',
+                                    success: function (data) {
+                                        if (!data.error) {
+                                            window.location.reload();
+                                        } else {
+                                            showError('Erro', data.msg);
+                                        }
+                                    },
+                                    error: function (x, s, e) {
+                                        showError('Erro', 'Erro ao executar operação');
+                                        console.log(e);
+                                    }
+                                });
+                            }
+                        },
+                        {
+                            caption: 'Não',
+                            cls: 'success js-dialog-close'
+                        }
+                    ]
+                });
+            }
+
+            $(".btnEditarDados").on("click", function () {
+                var content = '<div class="row">' +
+                    '<div class="cell-12"><label for="motivoid">Vendedor</label><select name="vendedorModal" id="cmbVendedorModal"></select></div>' +
+                    '</div>';
+
+                var cid = $(this).data('id');
+
+                Metro.dialog.create({
+                    title: 'Edição de dados',
+                    clsDialog: '',
+                    clsTitle: 'bg-orange fg-light',
+                    content: content,
+                    actions: [
+                        {
+                            caption: 'Confirmar',
+                            cls: 'alert',
+                            onclick: function (dlg) {
+                                
+                                var vid = $("#cmbVendedorModal").val();
+                              
+                                $.ajax({
+                                    url: '@Url.Action("EditarDados", "Contratos")',
+                                    type: 'POST',
+                                    data: { id: cid, vend: vid },
+                                    dataType: 'JSON',
+                                    success: function (data) {
+                                        if (data.error) {
+                                            showError('Erro', 'Erro ao executar operação');
+                                            console.log(data.msg);
+                                            return;
+                                        }
+
+                                        window.location.reload();
+                                    }
+                                });
+
+                                Metro.dialog.close(dlg);
+                            }
+                        },
+                        {
+                            caption: 'Cancelar',
+                            cls: 'success js-dialog-close'
+                        }
+                    ],
+                    onOpen: function () {
+                        $.ajax({
+                            url: '@Url.Action("BuscarTodosVendedores", "Contratos")',
+                            dataType: 'JSON',
+                            success: function (data) {
+                                if (data.error) {
+                                    showError('Erro', 'Erro ao obter dados');
+                                    console.log(data.msg);
+                                    return;
+                                }
+
+                                var select = $("#cmbVendedorModal");
+                                var opt = $('<option></option>');
+                                opt.attr('value', '0');
+                                opt.text('Selecione');
+                                opt.appendTo(select);
+
+                                $.each(data.results,
+                                    function (i, item) {
+                                        var opt = $('<option></option>');
+                                        opt.attr('value', item.id);
+                                        opt.text(item.text);
+                                        opt.appendTo(select);
+                                    });
+                            }
+                        });
+                    }
+                });
+            });
+
+            $(".btnEditarParcela").on("click", function () {
+                var content = '<div class="row">' +
+                    '<div class="cell-12"><label>Parcelas</label><select name="parcelaModal" id="cmbParcelaModal"></select></div>' +
+                    '<div class="cell-12"><label>Forma de pagamento</label><select name="formaModal" id="cmbFormaModal"></select></div>' +
+                    '</div>';
+
+                var cid = $(this).data('id');
+
+                Metro.dialog.create({
+                    title: 'Parcelas',
+                    clsDialog: '',
+                    clsTitle: 'bg-orange fg-light',
+                    content: content,
+                    actions: [
+                        {
+                            caption: 'Confirmar',
+                            cls: 'alert',
+                            onclick: function (dlg) {
+
+                                var matriz = [];
+
+                                var parcela = $("#cmbParcelaModal").val();
+                                var forma = $("#cmbFormaModal").val();
+
+                                if (parcela != "0" && forma != "0") {
+                                    matriz.push({ Id: parcela, FormaPagamentoId: forma });
+                                }
+                                
+                                var resultado = "";
+
+                                if (matriz.length > 0) {
+                                    resultado = JSON.stringify(matriz);
+                                }
+
+                                $.ajax({
+                                    url: '@Url.Action("EditarFormaPagmentoParcelaContrato", "Contratos")',
+                                    type: 'POST',
+                                    data: { dados: resultado },
+                                    dataType: 'JSON',
+                                    success: function (data) {
+                                        if (data.error) {
+                                            showError('Erro', 'Erro ao executar operação');
+                                            console.log(data.msg);
+                                            return;
+                                        }
+
+                                        window.location.reload();
+                                    }
+                                });
+
+                                Metro.dialog.close(dlg);
+                            }
+                        },
+                        {
+                            caption: 'Cancelar',
+                            cls: 'success js-dialog-close'
+                        }
+                    ],
+                    onOpen: function () {
+                        $.ajax({
+                            url: '@Url.Action("RetornarDadosParaEditarFormasDePagamento", "Contratos")',
+                            dataType: 'JSON',
+                            data: { id: cid},
+                            success: function (data) {
+                                if (data == null) {
+                                    showError('Erro', 'Erro ao obter dados');
+                                    return;
+                                }
+                                else {
+                                    if (data.Parcelas != null && data.Parcelas.length > 0) {
+                                        var selectParcela = $("#cmbParcelaModal");
+                                        var opt = $('<option></option>');
+                                        opt.attr('value', '0');
+                                        opt.text('Selecione');
+                                        opt.appendTo(selectParcela);
+
+                                        $.each(data.Parcelas,
+                                            function (i, item) {
+                                                var opt = $('<option></option>');
+                                                opt.attr('value', item.Id);
+                                                opt.text(item.Numero + " - " + item.Valor);
+                                                opt.appendTo(selectParcela);
+                                            });
+
+                                        var selectForma = $("#cmbFormaModal");
+                                        var opt = $('<option></option>');
+                                        opt.attr('value', '0');
+                                        opt.text('Selecione');
+                                        opt.appendTo(selectForma);
+
+                                        $.each(data.FormasPagamento,
+                                            function (i, item) {
+                                                var opt = $('<option></option>');
+                                                opt.attr('value', item.Id);
+                                                opt.text(item.Descricao);
+                                                opt.appendTo(selectForma);
+                                            });
+                                    }
+                                }
+                            }
+                        });
+                    }
+                });
+            });
+        });
+
+    </script>
+}

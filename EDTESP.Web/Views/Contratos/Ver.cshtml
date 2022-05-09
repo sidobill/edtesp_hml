@@ -1,0 +1,159 @@
+﻿@model EDTESP.Web.ViewModels.Operacoes.ContratoViewModel
+@{
+    Layout = null;
+}
+<div class="row">
+    <div class="cell cell-md-6">
+        <h5>Dados Gerais</h5>
+        <div class="row mb-2">
+            <label class="cell cell-md-3">Número</label>
+            @Html.TextBoxFor(model => model.Numero, new { @class = "cell cell-md-9", @readonly = "readonly" })
+        </div>
+
+        <div class="row mb-2">
+            <label class="cell cell-md-3">Cliente</label>
+            @Html.TextBoxFor(model => model.Cliente, new { @class = "cell cell-md-9", @readonly = "readonly" })
+        </div>
+
+        <div class="row mb-2">
+            <label class="cell cell-md-3">Vendedor</label>
+            @Html.TextBoxFor(model => model.Vendedor, new { @class = "cell cell-md-9", @readonly = "readonly" })
+        </div>
+
+        <div class="row mb-2">
+            <label class="cell cell-md-3">Produtos</label>
+            @Html.TextBoxFor(model => model.Descricao, new { @class = "cell cell-md-9", @readonly = "readonly" })
+        </div>
+
+        @*<div class="row mb-2">
+            <label class="cell cell-md-3">Forma Pgto.</label>
+            @Html.TextBoxFor(model => model.FormaPagamento, new { @class = "cell cell-md-9", @readonly = "readonly" })
+        </div>*@
+
+        @*<div class="row mb-2">
+            <label class="cell cell-md-3">Cond. Pgto.</label>
+            @Html.TextBoxFor(model => model.CondicaoPagamento, new { @class = "cell cell-md-9", @readonly = "readonly" })
+        </div>*@
+
+        <div class="row mb-2">
+            <label class="cell cell-md-3">Dt. Início</label>
+            <input type="text" class="cell cell-md-9" name="DataInicio" id="DataInicio" value="@Html.Raw(Model.DataInicio.ToShortDateString())" readonly="readonly"/>
+        </div>
+
+        <div class="row mb-2">
+            <label class="cell cell-md-3">Dt. Término</label>
+            <input type="text" class="cell cell-md-9" name="DataTermino" id="DataTermino" value="@Html.Raw(Model.DataTermino.HasValue ? Model.DataTermino.Value.ToShortDateString() : "")" readonly="readonly" />
+        </div>
+        
+        <div class="row mb-2">
+            <label class="cell cell-md-3">Status</label>
+            @Html.TextBoxFor(model => model.StatusContrato, new { @class = "cell cell-md-9", @readonly = "readonly" })
+        </div>
+
+        <div class="row mb-2">
+            <label class="cell cell-md-3">Obs.</label>
+            @Html.TextAreaFor(model => model.Observacao, new { @class = "cell cell-md-9", @readonly = "readonly" })
+        </div>
+    </div>
+
+    <div class="cell cell-md-6">
+        @*<h5>Financeiro</h5>*@
+
+        <div class="">
+
+            <ul data-role="tabs" data-expand="true">
+                <li><a href="#t1">Financeiro</a></li>
+                <li><a href="#t2">Histórico</a></li>
+            </ul>
+
+            <div class="p-2">
+                <div id="t1">
+                    <div class="row mb-2">
+                        <label class="cell cell-md-3">Valor Base</label>
+                        @Html.TextBoxFor(model => model.ValorBase, new { @class = "cell cell-md-9", @readonly = "readonly" })
+                        
+                    </div>
+                    <div class="row mb-2">
+                        <label class="cell cell-md-3">Tarifas</label>
+                        @Html.TextBoxFor(model => model.Tarifas, new { @class = "cell cell-md-9", @readonly = "readonly" })
+                    </div>
+                    <div class="row mb-2">
+                        <label class="cell cell-md-3">Desconto</label>
+                        @Html.TextBoxFor(model => model.Desconto, new { @class = "cell cell-md-9", @readonly = "readonly" })
+                    </div>
+                    <div class="row mb-2">
+                        <label class="cell cell-md-3">Total</label>
+                        @Html.TextBoxFor(model => model.ValorFinal, new { @class = "cell cell-md-9", @readonly = "readonly" })
+                    </div>
+
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Parcela</th>
+                                <th>Vencto.</th>
+                                <th>Forma.</th>
+                                <th>Valor</th>
+                                <th>Status</th>
+                                <th>Dt. Pgto.</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tblParc">
+                        @if (Model.Titulos.Any())
+                        {
+                            foreach (var item in Model.Titulos)
+                            {
+                            <tr>
+                                <td>@Html.DisplayFor(modelItem => item.Parcela)/@Html.DisplayFor(modelItem => Model.Titulos.Count)</td>
+                                <td>@Html.DisplayFor(modelItem => item.DataVenctoReal)</td>
+                                <td>@Html.DisplayFor(modelItem => item.FormaPagamento)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Valor)</td>
+                                <td>@Html.DisplayFor(modelItem => item.StatusPgto)</td>
+                                <td>@Html.DisplayFor(modelItem => item.DataBaixa)</td>
+                            </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="5" class="text-center">Sem registros</td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                </div>
+                <div id="t2">
+                    <table class="table" id="tblHst">
+                        <thead>
+                        <tr>
+                            <th>Data/Hora</th>
+                            <th>Usuário</th>
+                            <th>Obs.</th>
+                            <th>Status Contrato</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.ContratoEventos.Any())
+                            {
+                                foreach (var item in Model.ContratoEventos)
+                                {
+                                    <tr>
+                                        <td>@Html.DisplayFor(modelItem => item.DataCriacao)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.UsuarioCriador)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.Observacao)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.StatusContrato)</td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="4" class="text-center">Sem registros</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,22 @@
+﻿@using EDTESP.Infrastructure.CC.Util
+@using EDTESP.Web.Helpers
+
+@{
+    Layout = "~/Views/Shared/_LayoutLogin.cshtml";
+    ViewBag.Title = "Login";
+}
+@using (Html.BeginForm("Index","Login",FormMethod.Post, new { @class = "form-signin"}))
+{
+    @Html.AntiForgeryToken()
+    <h1 class="h3 mb-3 font-weight-normal">Entrar no Sistema</h1>
+    @Html.EdtespValidationSummary(null, new { @class = "alert alert-danger" })
+    <label for="inputEmail" class="sr-only">Email address</label>
+    <input type="text" id="inputEmail" name="Usuario" class="form-control" placeholder="Usuário" required autofocus>
+    <label for="inputPassword" class="sr-only">Password</label>
+    <input type="password" id="inputPassword" name="Senha" class="form-control" placeholder="Senha" required>
+    <button class="btn btn-lg btn-primary btn-block m-0" type="submit">
+        <i class="fa fa-sign-in"></i> Entrar
+    </button>
+
+}
+

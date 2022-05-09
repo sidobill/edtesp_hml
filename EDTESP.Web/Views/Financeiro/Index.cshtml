@@ -1,0 +1,50 @@
+﻿@using EDTESP.Web.Helpers
+@using PagedList.Mvc
+@model PagedList.IPagedList<EDTESP.Web.ViewModels.Financeiro.TituloViewModel>
+
+@{
+    ViewBag.Title = "Financeiro";
+    //ViewBag.SubTitle = $"<a class=\"button primary\" href=\"{Url.Action("Novo","Clientes")}\">Novo</a>";
+}
+<div class="mb-2">
+    <p class="small">Busque por Contrato, Cliente, CPF/CNPJ do Cliente, Vendedor, Forma de pgto, Condição de pgto. ou Nosso Número</p>
+    @Html.Partial("_busca_data")
+</div>
+
+<div class="mb-2">
+    @Html.Partial("_Grid", Model)
+</div>
+
+<div class="mb-2">
+    @Html.Partial("_Paginacao")
+</div>
+
+<div class="mb-12" style="text-align:center">
+    <input type="button" class="button success" value="Download do boleto" onclick="downloadVariosBoletos()" />
+</div>
+
+@Html.Partial("_DialogEmail")
+
+@section styles
+{
+    @Styles.Render("~/content/bdp")
+}
+
+@section scripts
+{
+    @Scripts.Render("~/scripts/jquery.fileDownload.js")
+    @Scripts.Render("~/bundles/masked")
+    @Scripts.Render("~/bundles/bdp")
+    <script type="text/javascript">
+        var urlVerTitulo = '@Url.Action("Ver", "Financeiro")';
+        var urlDonwloadBol = '@Url.Action("BaixarBoleto", "Financeiro")';
+        var urlEnvioEmail = '@Url.Action("EnviarBoleto", "Financeiro")';
+        var urlAlterarVencto = '@Url.Action("AlterarVencto", "Financeiro")';
+        var urlBaixaTit = '@Url.Action("BaixarTitulo", "Financeiro")';
+        var urlCancBol = '@Url.Action("CancelarBoleto", "Financeiro")';
+        var urlGerBol = '@Url.Action("GerarBoleto", "Financeiro")';
+        var urlDownloadBolVarios = '@Url.Action("BaixarVariosBoletos", "Financeiro")';
+        var urlMarcarComoNaoPago = '@Url.Action("MarcarTituloComoNaoPago", "Financeiro")';
+    </script>
+    @Scripts.Render("~/scripts/ui/financeiro.js")
+}

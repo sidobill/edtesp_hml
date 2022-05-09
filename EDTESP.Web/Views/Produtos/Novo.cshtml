@@ -1,0 +1,79 @@
+﻿@using EDTESP.Web.Helpers
+@model EDTESP.Web.ViewModels.Cadastros.ProdutoViewModel
+
+@{
+    ViewBag.Title = "Produtos";
+    ViewBag.SubTitle = "Novo Produto";
+}
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.EdtespValidationSummary(null, new { @class = "alert alert-danger" })
+
+
+
+    <div class="row mb-2">
+        @Html.LabelFor(model => model.Categoria, htmlAttributes: new { @class = "cell-sm-2" })
+        <div class="cell-sm-10 no-gutters">
+            <div class="cell-sm-3">
+                @Html.EditorFor(model => model.Categoria, new { htmlAttributes = new { } })
+            </div>
+            @Html.ValidationMessageFor(model => model.Categoria, "", new { @class = "fg-red" })
+        </div>
+    </div>
+
+    <div class="row mb-2">
+        @Html.LabelFor(model => model.Especie, htmlAttributes: new { @class = "cell-sm-2" })
+        <div class="cell-sm-10 no-gutters">
+            <div class="cell-sm-3">
+                @Html.EditorFor(model => model.Especie, new { htmlAttributes = new { } })
+            </div>
+            @Html.ValidationMessageFor(model => model.Especie, "", new { @class = "fg-red" })
+        </div>
+    </div>
+
+    <div class="row mb-2">
+        @Html.LabelFor(model => model.Descricao, htmlAttributes: new { @class = "cell-sm-2" })
+        <div class="cell-sm-10 no-gutters">
+            <div class="cell-sm-3">
+                @Html.TextAreaFor(model => model.Descricao, new { })
+            </div>
+            @Html.ValidationMessageFor(model => model.Descricao, "", new { @class = "fg-red" })
+        </div>
+    </div>
+
+    <div class="row mb-2">
+        @Html.LabelFor(model => model.PrecoBase, htmlAttributes: new { @class = "cell-sm-2" })
+        <div class="cell-sm-10 no-gutters">
+            <div class="cell-sm-3">
+                @Html.EditorFor(model => model.PrecoBase, new { htmlAttributes = new { } })
+            </div>
+            @Html.ValidationMessageFor(model => model.PrecoBase, "", new { @class = "fg-red" })
+        </div>
+    </div>
+
+    <div class="row mb-2">
+        <div class="offset-sm-2 cell-sm-10">
+            <div class="cell">
+                <button type="submit" class="button primary">Salvar</button>
+                <a class="button link" href="@Url.Action("Index", "Produtos")">Cancelar</a>
+            </div>
+        </div>
+    </div>
+
+}
+
+@section scripts
+{
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/maskmoney")
+    <script type="text/javascript">
+        $(function() {
+            $("#ValorBase, #Tarifas, #Desconto, #ValorFinal").maskMoney({
+                thousands: '',
+                decimal: ',',
+                allowZero: true
+            });
+        });
+    </script>
+}

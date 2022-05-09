@@ -1,0 +1,295 @@
+﻿@using EDTESP.Domain.Entities
+@{
+    var ctrl = ViewData["controller"]?.ToString();
+    var act = ViewData["action"]?.ToString();
+
+    var usr = ViewBag.Usuario as Usuario;
+
+    if (usr == null)
+    {
+        usr = TempData["Usuario"] as Usuario;
+    }
+}
+<nav data-role="ribbonmenu">
+    <ul class="tabs-holder">
+        <li class="static"><a href="@Url.Action("Index","Home")">Início</a></li>
+        <li data-rb-tab="cadastros"><a href="#section-one">Cadastros</a></li>
+        <li data-rb-tab="operacao"><a href="#section-two">Operação</a></li>
+        <li data-rb-tab="financeiro"><a href="#section-three">Financeiro</a></li>
+        <li data-rb-tab="relatorios"><a href="#section-four">Relatórios</a></li>
+        <li class="static bg-red"><a href="@Url.Action("Logout","Login")">Sair</a></li>
+    </ul>
+
+    <div class="content-holder">
+        <div class="section" id="section-one">
+            <div class="group">
+                <div class="ribbon-split-button">
+                    <button class="ribbon-main" data-href="@Url.Action("Usuarios", "Cadastros")">
+                        <span class="icon">
+                            <span class="mif-users"></span>
+                        </span>
+                    </button>
+                    <span class="ribbon-split dropdown-toggle">Usuários</span>
+                    <ul class="ribbon-dropdown" data-role="dropdown" data-duration="100">
+                        <li>
+                            <a href="@Url.Action("Grupos", "Cadastros")">Grupos</a>
+                        </li>
+                        <li><a href="@Url.Action("Setores", "Cadastros")">Setores</a></li>
+                        <li><a href="@Url.Action("Cargos", "Cadastros")">Cargos</a></li>
+                        <li><a href="@Url.Action("Times", "Cadastros")">Times</a></li>
+                    </ul>
+                </div>
+
+                <div data-role="buttonsGroup" data-cls-active="active">
+
+                    <button class="ribbon-button" data-href="@Url.Action("Vendedores", "Cadastros")">
+                        <span class="icon">
+                            <span class="mif-users"></span>
+                        </span>
+                        <span class="caption">Vendedores</span>
+                    </button>
+
+                </div>
+
+                <div class="ribbon-split-button">
+                    <button class="ribbon-main" data-href="@Url.Action("Condicoes", "Cadastros")">
+                        <span class="icon">
+                            <span class="mif-money"></span>
+                        </span>
+                    </button>
+                    <span class="ribbon-split dropdown-toggle">Cond. de Pgto.</span>
+                    <ul class="ribbon-dropdown" data-role="dropdown" data-duration="100">
+                        <li>
+                            <a href="@Url.Action("Formas", "Cadastros")">Formas de Pgto.</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <span class="title">Geral</span>
+            </div>
+
+            <div class="group">
+                <div data-role="buttonsGroup" data-cls-active="active">
+
+                    <button class="ribbon-button" data-href="@Url.Action("Index", "Clientes")">
+                        <span class="icon">
+                            <span class="mif-broadcast"></span>
+                        </span>
+                        <span class="caption">Clientes</span>
+                    </button>
+
+                </div>
+                <span class="title">Clientes</span>
+            </div>
+
+            <div class="group">
+                <div data-role="buttonsGroup" data-cls-active="active">
+
+                    <button class="ribbon-button" data-href="@Url.Action("IntegrarClienteBraslink", "Clientes")">
+                        <span class="icon">
+                            <span class="mif-broadcast"></span>
+                        </span>
+                        <span class="caption">Enviar cliente para Braslink</span>
+                    </button>
+
+                </div>
+                <span class="title">Braslink</span>
+            </div>
+
+            <div class="group">
+                <div data-role="buttonsGroup" data-cls-active="active">
+
+                    <button class="ribbon-button" data-href="@Url.Action("Feriados", "Cadastros")">
+                        <span class="icon">
+                            <span class="mif-calendar"></span>
+                        </span>
+                        <span class="caption">Feriados</span>
+                    </button>
+
+                    @*<button class="ribbon-button" data-href="@Url.Action("Empresas", "Cadastros")">
+                    <span class="icon">
+                        <span class="mif-user-check"></span>
+                    </span>
+                    <span class="caption">Cedente/Produto</span>
+                </button>*@
+
+                </div>
+                <span class="title">Outros</span>
+            </div>
+
+            @*<div class="group">
+            <div data-role="buttonsGroup" data-cls-active="active">
+
+                <button class="ribbon-button" data-href="">
+                    <span class="icon">
+                        <span class="mif-cogs"></span>
+                    </span>
+                    <span class="caption">Configurações</span>
+                </button>
+
+            </div>
+            <span class="title">Administração</span>
+        </div>*@
+
+        </div>
+        <div class="section" id="section-two">
+            <div class="group">
+                <div data-role="buttonsGroup" data-cls-active="active">
+
+                    <button class="ribbon-button" data-href="@Url.Action("Index", "Contratos")">
+                        <span class="icon">
+                            <span class="mif-dashboard"></span>
+                        </span>
+                        <span class="caption">Dashboard</span>
+                    </button>
+
+                    <button class="ribbon-button" data-href="@Url.Action("Novo", "Contratos")">
+                        <span class="icon">
+                            <span class="mif-add"></span>
+                        </span>
+                        <span class="caption">Novo Contrato</span>
+                    </button>
+
+                    <button class="ribbon-button" data-href="@Url.Action("EmAnalise", "Contratos")">
+                        <span class="icon">
+                            <span class="mif-file-empty"></span>
+                        </span>
+                        <span class="caption">Em Análise</span>
+                    </button>
+
+                    <button class="ribbon-button" data-href="@Url.Action("Aprovados", "Contratos")">
+                        <span class="icon">
+                            <span class="mif-file-play"></span>
+                        </span>
+                        <span class="caption">Aprovados</span>
+                    </button>
+
+                    <button class="ribbon-button" data-href="@Url.Action("Reprovados", "Contratos")">
+                        <span class="icon">
+                            <span class="mif-cross"></span>
+                        </span>
+                        <span class="caption">Reprovados</span>
+                    </button>
+
+                    <button class="ribbon-button" data-href="@Url.Action("Suspensos", "Contratos")">
+                        <span class="icon">
+                            <span class="mif-minus"></span>
+                        </span>
+                        <span class="caption">Suspensos</span>
+                    </button>
+
+                </div>
+                <span class="title">Contratos</span>
+            </div>
+        </div>
+        <div class="section" id="section-three">
+            <div class="group">
+                <div data-role="buttonsGroup" data-cls-active="active">
+
+                    @*<button class="ribbon-button" data-href="@Url.Action("Index", "Financeiro")">
+                        <span class="icon">
+                            <span class="mif-dashboard"></span>
+                        </span>
+                        <span class="caption">Dashboard</span>
+                    </button>*@
+
+                    <button class="ribbon-button" data-href="@Url.Action("Index", "Financeiro")">
+                        <span class="icon">
+                            <span class="mif-money"></span>
+                        </span>
+                        <span class="caption">Contas a Receber</span>
+                    </button>
+
+                    <button class="ribbon-button" data-href="@Url.Action("EmAtraso", "Financeiro")">
+                        <span class="icon">
+                            <span class="mif-money"></span>
+                        </span>
+                        <span class="caption">Em Atraso</span>
+                    </button>
+
+                </div>
+                <span class="title">Cobrança</span>
+            </div>
+            <div class="group">
+                <div data-role="buttonsGroup" data-cls-active="active">
+
+                    <button class="ribbon-button" data-href="@Url.Action("BoletosPendentes", "Financeiro")">
+                        <span class="icon">
+                            <span class="mif-file-text"></span>
+                        </span>
+                        <span class="caption">Boletos Pendentes de Envio</span>
+                    </button>
+
+                    <button class="ribbon-button" data-href="@Url.Action("Remessas", "Financeiro")">
+                        <span class="icon">
+                            <span class="mif-file-text"></span>
+                        </span>
+                        <span class="caption">Remessas (CNAB)</span>
+                    </button>
+
+                    <button class="ribbon-button" data-href="@Url.Action("ArquivoRetorno", "Financeiro")">
+                        <span class="icon">
+                            <span class="mif-file-text"></span>
+                        </span>
+                        <span class="caption">Arquivo de retorno</span>
+                    </button>
+                </div>
+                <span class="title">Boletos</span>
+            </div>
+        </div>
+        <div class="section" id="section-four">
+            <div class="group">
+                <div data-role="buttonsGroup" data-cls-active="active">
+                    <button class="ribbon-button" data-href="@Url.Action("ComissaoIndividual", "Relatorios")">
+                        <span class="icon">
+                            <span class="mif-table"></span>
+                        </span>
+                        <span class="caption">Comissão individual</span>
+                    </button>
+                    <button class="ribbon-button" data-href="@Url.Action("AdiantamentoSalarial", "Relatorios")">
+                        <span class="icon">
+                            <span class="mif-table"></span>
+                        </span>
+                        <span class="caption">Adiantamento salarial</span>
+                    </button>
+                    <button class="ribbon-button" data-href="@Url.Action("EstornoComissao", "Relatorios")">
+                        <span class="icon">
+                            <span class="mif-table"></span>
+                        </span>
+                        <span class="caption">Estorno comissão</span>
+                    </button>
+                    <button class="ribbon-button" data-href="@Url.Action("ResumoVendaGeral", "Relatorios")">
+                        <span class="icon">
+                            <span class="mif-table"></span>
+                        </span>
+                        <span class="caption">Resumo venda geral</span>
+                    </button>
+                    <button class="ribbon-button" data-href="@Url.Action("ResumoVendaRepresentante", "Relatorios")">
+                        <span class="icon">
+                            <span class="mif-table"></span>
+                        </span>
+                        <span class="caption">Resumo venda representante</span>
+                    </button>
+                    <button class="ribbon-button" data-href="@Url.Action("CobrancaCliente", "Relatorios")">
+                        <span class="icon">
+                            <span class="mif-table"></span>
+                        </span>
+                        <span class="caption">Cobrança cliente</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+<div class="container-fluid bg-gray light p-2 clear">
+    <div class="place-left">
+        <p>
+            Seja bem-vindo @Html.Raw(usr?.Nome)
+        </p>
+    </div>
+    <div class="place-right">
+        @*<a class="button alert mini" href="@Url.Action("Logout", "Login")">
+            <span class="mif-exit"></span> Sair
+        </a>*@
+    </div>
+</div>

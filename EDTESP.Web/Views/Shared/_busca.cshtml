@@ -1,0 +1,7 @@
+﻿@using (Html.BeginForm())
+{
+    var ctr = ViewContext.Controller.ValueProvider.GetValue("controller").RawValue?.ToString();
+    var act = ViewContext.Controller.ValueProvider.GetValue("action").RawValue?.ToString();
+    var url = Url.Action(act, ctr);
+    <input type="text" name="termo" placeholder="Busca" data-role="input" data-search-button="true" data-on-clear-click="window.location.href='@url'" value="@ViewBag.Termo" autocomplete="off"/>
+}

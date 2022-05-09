@@ -1,0 +1,211 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{5CD0DB5B-F6A9-41DB-90B3-4A52C9D4F1BA}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>EDTESP.Application</RootNamespace>
+    <AssemblyName>EDTESP.Application</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="itextsharp, Version=5.5.13.1, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <HintPath>..\packages\iTextSharp.5.5.13.1\lib\itextsharp.dll</HintPath>
+    </Reference>
+    <Reference Include="itextsharp.xmlworker, Version=5.5.13.1, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <HintPath>..\packages\itextsharp.xmlworker.5.5.13.1\lib\itextsharp.xmlworker.dll</HintPath>
+    </Reference>
+    <Reference Include="RazorEngine, Version=3.10.0.0, Culture=neutral, PublicKeyToken=9ee697374c7e744a, processorArchitecture=MSIL">
+      <HintPath>..\packages\RazorEngine.3.10.0\lib\net45\RazorEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.0.0\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AdiantamentoSalarialAppService.cs" />
+    <Compile Include="CobrancaClienteAppService.cs" />
+    <Compile Include="ComissaoIndividualService.cs" />
+    <Compile Include="EdtespAppServiceBase.cs" />
+    <Compile Include="AppServiceBase.cs" />
+    <Compile Include="CondicaoPagamentoAppService.cs" />
+    <Compile Include="ContratoAppService.cs" />
+    <Compile Include="DataSets\Edtesp.cs">
+      <DependentUpon>Edtesp.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="DataSets\Edtesp.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Edtesp.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="EstornoComissaoAppService.cs" />
+    <Compile Include="GrupoUsuarioAppService.cs" />
+    <Compile Include="IntegracaoBraslinkApp.cs" />
+    <Compile Include="Interfaces\IAdiantamentoSalarialAppService.cs" />
+    <Compile Include="Interfaces\ICobrancaClienteAppService.cs" />
+    <Compile Include="Interfaces\IComissaoInvidualAppService.cs" />
+    <Compile Include="Interfaces\IEdtespAppServiceBase.cs" />
+    <Compile Include="Interfaces\IAppServiceBase.cs" />
+    <Compile Include="Interfaces\ICondicaoPagamentoAppService.cs" />
+    <Compile Include="Interfaces\IContratoAppService.cs" />
+    <Compile Include="Interfaces\IEstornoComissaoAppService.cs" />
+    <Compile Include="Interfaces\IGrupoUsuarioAppService.cs" />
+    <Compile Include="Interfaces\IIntegracaoBraslinkApp.cs" />
+    <Compile Include="Interfaces\IResumoVendaGeralAppService.cs" />
+    <Compile Include="Interfaces\IResumoVendaRepresentanteAppService.cs" />
+    <Compile Include="Interfaces\ITituloAppService.cs" />
+    <Compile Include="Interfaces\IUsuarioAppService.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ResumoVendaGeralAppService.cs" />
+    <Compile Include="ResumoVendaRepresentanteAppService.cs" />
+    <Compile Include="TituloAppService.cs" />
+    <Compile Include="UsuarioAppService.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\EDTESP.Domain\EDTESP.Domain.csproj">
+      <Project>{8707be77-ddd2-4b82-8f81-e276eb38e5d3}</Project>
+      <Name>EDTESP.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EDTESP.Excel\EDTESP.Excel.csproj">
+      <Project>{9e8d68db-08ae-4e77-981b-8bcc9d2b5767}</Project>
+      <Name>EDTESP.Excel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Edtesp.Ftp\Edtesp.Ftp.csproj">
+      <Project>{ca29d23c-3008-44f3-b655-5e94035bfb3f}</Project>
+      <Name>Edtesp.Ftp</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EDTESP.Infrastructure.CC.BNet\EDTESP.Infrastructure.CC.BNet.csproj">
+      <Project>{eaf04fcf-923c-4d4b-90fe-1f36e43cd39b}</Project>
+      <Name>EDTESP.Infrastructure.CC.BNet</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EDTESP.Infrastructure.CC.GDrive\EDTESP.Infrastructure.CC.GDrive.csproj">
+      <Project>{a8147941-a7a5-40ea-84ee-7bbee499f455}</Project>
+      <Name>EDTESP.Infrastructure.CC.GDrive</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EDTESP.Infrastructure.CC.GNet\EDTESP.Infrastructure.CC.GNet.csproj">
+      <Project>{a9d84c01-41b9-4d39-a39a-4ccaf9e4f22e}</Project>
+      <Name>EDTESP.Infrastructure.CC.GNet</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EDTESP.Infrastructure.CC.ReportViewer\EDTESP.Infrastructure.CC.ReportViewer.csproj">
+      <Project>{fd3bb5b2-fad0-4c74-aaeb-43c6490545a0}</Project>
+      <Name>EDTESP.Infrastructure.CC.ReportViewer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EDTESP.Infrastructure.CC.Util\EDTESP.Infrastructure.CC.Util.csproj">
+      <Project>{c6400f3f-e08d-4e61-9204-eb2460a1950d}</Project>
+      <Name>EDTESP.Infrastructure.CC.Util</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EDTESP.Infrastructure.Data\EDTESP.Infrastructure.Data.csproj">
+      <Project>{5581c149-8640-4cb5-bee8-4b91d215129f}</Project>
+      <Name>EDTESP.Infrastructure.Data</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="DataSets\Edtesp.xsc">
+      <DependentUpon>Edtesp.xsd</DependentUpon>
+    </None>
+    <None Include="DataSets\Edtesp.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>Edtesp.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="DataSets\Edtesp.xss">
+      <DependentUpon>Edtesp.xsd</DependentUpon>
+    </None>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="logotipos\clanesp.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="logotipos\edtesp.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="logotipos\guiafaz.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="logotipos\listafacil.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="logotipos\nacional.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Templates\envio_boleto.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Templates\envio_contrato.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Templates\envio_boleto_contrato.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="RDLC\cancel_renova.rdlc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RDLC\carta_instr.rdlc">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RDLC\carta_cobr.rdlc">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RDLC\carta_canc_total.rdlc">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RDLC\carta_canc_geral.rdlc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RDLC\_modelo1.rdlc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RDLC\modelo1.rdlc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

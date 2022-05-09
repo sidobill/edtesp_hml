@@ -1,0 +1,78 @@
+﻿@using EDTESP.Web.Helpers
+@using PagedList.Mvc
+@model PagedList.IPagedList<EDTESP.Web.ViewModels.Cadastros.VendedorViewModel>
+
+@{
+    ViewBag.Title = "Vendedores";
+    ViewBag.SubTitle = $"<a class=\"button primary\" href=\"{Url.Action("NovoVendedor","Cadastros")}\">Novo</a>";
+}
+<div class="mb-2">
+    @Html.Partial("_busca")
+</div>
+<div class="">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.FirstOrDefault().VendedorId)</th>
+                <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Cpf)</th>
+                <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Nome)</th>
+                <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Setor)</th>
+                <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Cargo)</th>
+                <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Time)</th>
+                <th>@Html.DisplayNameFor(model => model.FirstOrDefault().VendedorAlcada)</th>
+                <th>@Html.DisplayNameFor(model => model.FirstOrDefault().StatusVendedor)</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        @if (Model.Any())
+        {
+            foreach (var item in Model)
+            {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.VendedorId)</td>
+                <td>@Html.MostraDocumento(item.Cpf, "F")</td>
+                <td>@Html.DisplayFor(modelItem => item.Nome)</td>
+                <td>@Html.DisplayFor(modelItem => item.Setor)</td>
+                <td>@Html.DisplayFor(modelItem => item.Cargo)</td>
+                <td>@Html.DisplayFor(modelItem => item.Time)</td>
+                <td>@Html.DisplayFor(modelItem => item.VendedorAlcada)</td>
+                <td>@Html.DisplayFor(modelItem => item.StatusVendedor)</td>
+                <td>
+                    <div class="toolbar">
+                        <a class="tool-button yellow" href="@Url.Action("EditarVendedor", "Cadastros", new {id = item.VendedorId})">
+                            <span class="mif-pencil"></span>
+                        </a>
+                        <button class="tool-button alert btnRem" data-id="@item.VendedorId">
+                            <span class="mif-cross"></span>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="9" class="text-center">Sem resultados</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>
+<div class="">
+    @Html.Partial("_Paginacao")
+</div>
+
+@section scripts
+{
+    <script type="text/javascript">
+        $(function() {
+            $(".btnRem").on('click',
+                function() {
+                    var cid = $(this).data('id');
+                    showConfirm('@Url.Action("RemoverVendedor", "Cadastros")', cid);
+                });
+        });
+    </script>
+}

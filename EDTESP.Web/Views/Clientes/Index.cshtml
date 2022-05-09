@@ -1,0 +1,143 @@
+﻿@using EDTESP.Web.Helpers
+@using PagedList.Mvc
+@model PagedList.IPagedList<EDTESP.Web.ViewModels.Cadastros.ClienteViewModel>
+
+@{
+    ViewBag.Title = "Clientes";
+    ViewBag.SubTitle = $"<a class=\"button primary\" href=\"{Url.Action("Novo","Clientes")}\">Novo</a>";
+}
+<div class="mb-2">
+    @Html.Partial("_busca")
+</div>
+<div class="">
+    <table class="table table-hover table-striped table-sm" >
+        <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().ClienteId)</th>
+            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Documento)</th>
+            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().RazaoSocial)</th>
+            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().DataCadastro)</th>
+            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Status)</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        @if (Model.Any())
+        {
+            foreach (var item in Model)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => item.ClienteId)</td>
+                    <td>@Html.MostraDocumento(item.Documento, item.TipoPessoa)</td>
+                    <td>@Html.DisplayFor(modelItem => item.RazaoSocial)</td>
+                    <td>@Html.DisplayFor(modelItem => item.DataCadastro)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Status)</td>
+                    <td>
+                        <div class="toolbar">
+                            <a class="tool-button secondary" href="@Url.Action("Ver", "Clientes", new {id = item.ClienteId})">
+                                <span class="mif-eye"></span>
+                            </a>
+                            <a class="tool-button yellow" href="@Url.Action("Editar", "Clientes", new {id = item.ClienteId})">
+                                <span class="mif-pencil"></span>
+                            </a>
+                            <button class="tool-button alert btnRem" data-id="@item.ClienteId">
+                                <span class="mif-cross"></span>
+                            </button>
+                            <button class="tool-button alert btnExp" data-id="@item.ClienteId">
+                                <span class="mif-plus"></span>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="6" class="text-center">Sem resultados</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>
+
+
+
+<div class="">
+    @Html.Partial("_Paginacao")
+</div>
+
+@section scripts
+{
+    <script type="text/javascript">
+        $(function() {
+            $(".btnRem").on('click',
+                function() {
+                    var cid = $(this).data('id');
+                    showConfirm('@Url.Action("Remover", "Clientes")', cid);
+                });
+
+            $(".btnExp").on('click',
+                function() {
+                    var cid = $(this).data('id');
+
+                    $.ajax({
+                        url: '@Url.Action("EnvioSite", "Clientes")',
+                        beforeSend: function() {
+                            showActivity();
+                        },
+                        success: function(data) {
+                            closeActivity();
+                            Metro.dialog.create({
+                                title: 'Envio ao Site',
+                                clsDialog: 'w-50',
+                                clsTitle: 'bg-gray',
+                                clsContent: '',
+                                content: data,
+                                actions: [
+                                    {
+                                        caption: 'Enviar',
+                                        cls: 'success',
+                                        onclick: function(dlg) {
+                                            var clasid = $("#classid").val();
+
+                                            $.ajax({
+                                                url: '@Url.Action("UploadCliente", "Clientes")',
+                                                data: { clienteId: cid, classId: clasid },
+                                                type: 'POST',
+                                                dataType: 'JSON',
+                                                beforeSend: function() {
+                                                    showActivity();
+                                                },
+                                                success: function(data) {
+                                                    closeActivity();
+
+                                                    if (data.error) {
+                                                        showError('Erro', 'Erro ao executar operação');
+                                                        console.log(data.msg);
+                                                        return false;
+                                                    }
+
+                                                    showInfo('Sucesso!', 'Cliente Enviado ao Site', function() {});
+                                                },
+                                                error: function(x, s, e) {
+                                                    closeActivity();
+                                                    showError('Erro', 'Erro ao executar operação');
+                                                    console.log(e);
+                                                }
+                                            });
+                                        }
+                                    }
+                                ]
+                            });
+                        },
+                        error: function(x, s, e) {
+                            closeActivity();
+                            showError('Erro', 'Erro ao executar operação');
+                            console.log(e);
+                        }
+                    })
+                });
+        });
+    </script>
+}

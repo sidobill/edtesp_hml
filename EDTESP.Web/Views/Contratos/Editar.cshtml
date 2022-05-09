@@ -1,0 +1,359 @@
+﻿@using EDTESP.Web.Helpers
+@model EDTESP.Web.ViewModels.Operacoes.ContratoViewModel
+
+@{
+    ViewBag.Title = "Contrato";
+    ViewBag.SubTitle = "Editar Contrato";
+}
+@using (Html.BeginForm())
+{
+    @Html.HiddenFor(model => model.ContratoId)
+    @Html.AntiForgeryToken()
+    @Html.EdtespValidationSummary(null, new { @class = "alert alert-danger" })
+
+    <div class="row mb-2">
+        @Html.LabelFor(model => model.Numero, htmlAttributes: new { @class = "cell-sm-3 cell-md-2" })
+        <div class="cell-sm-9 cell-md-10 no-gap">
+            <div class="cell cell-md-3">
+                @Html.EditorFor(model => model.Numero)
+            </div>
+            @Html.ValidationMessageFor(model => model.Numero, "", new { @class = "fg-red" })
+        </div>
+    </div>
+
+    <div class="row mb-2">
+        @Html.LabelFor(model => model.AnoEdicao, htmlAttributes: new { @class = "cell-sm-3 cell-md-2" })
+        <div class="cell-sm-9 cell-md-10 no-gap">
+            <div class="cell cell-md-3">
+                @Html.EditorFor(model => model.AnoEdicao, new { data_role = "input" })
+            </div>
+            @Html.ValidationMessageFor(model => model.AnoEdicao, "", new { @class = "fg-red" })
+        </div>
+    </div>
+
+    <div class="row mb-2">
+        @Html.LabelFor(model => model.EmpresaId, htmlAttributes: new { @class = "cell-sm-3 cell-md-2" })
+        <div class="cell-sm-9 cell-md-10 no-gap">
+            <div class="cell cell-md-3">
+                <select id="Empresa" name="EmpresaId"></select>
+            </div>
+            @Html.ValidationMessageFor(model => model.EmpresaId, "", new { @class = "fg-red" })
+        </div>
+    </div>
+
+    <div class="row mb-2">
+        @Html.LabelFor(model => model.ClienteId, htmlAttributes: new { @class = "cell-sm-3 cell-md-2" })
+        <div class="cell-sm-9 cell-md-10 no-gap">
+            <div class="cell cell-md-3">
+                <select id="Cliente" name="ClienteId"></select>
+            </div>
+            @Html.ValidationMessageFor(model => model.ClienteId, "", new { @class = "fg-red" })
+        </div>
+    </div>
+
+    <div class="row mb-2">
+        @Html.LabelFor(model => model.VendedorId, htmlAttributes: new { @class = "cell-sm-3 cell-md-2" })
+        <div class="cell-sm-9 cell-md-10 no-gap">
+            <div class="cell cell-md-3">
+                <select id="Vendedor" name="VendedorId"></select>
+            </div>
+            @Html.ValidationMessageFor(model => model.VendedorId, "", new { @class = "fg-red" })
+        </div>
+    </div>
+
+    <div class="row mb-2">
+        @Html.LabelFor(model => model.CondicaoPagamentoIdStr, htmlAttributes: new { @class = "cell-sm-3 cell-md-2" })
+        <div class="cell-sm-9 cell-md-10 no-gap">
+            <div class="cell cell-md-3">
+                @Html.DropDownList("CondicaoPagamentoIdStr", (IEnumerable<SelectListItem>)ViewBag.Formas)
+            </div>
+            @Html.ValidationMessageFor(model => model.CondicaoPagamentoIdStr, "", new { @class = "fg-red" })
+        </div>
+    </div>
+
+    <div class="row mb-2">
+        @Html.LabelFor(model => model.DataInicio, htmlAttributes: new { @class = "cell-sm-3 cell-md-2" })
+        <div class="cell-sm-9 cell-md-10 no-gap">
+            <div class="cell cell-md-3">
+                @Html.TextBoxFor(model => model.DataInicio, new { data_role = "calendarpicker", data_format = "%d/%m/%Y", data_input_format = "%d/%m/%Y" })
+            </div>
+            @Html.ValidationMessageFor(model => model.DataInicio, "", new { @class = "fg-red" })
+        </div>
+    </div>
+
+    <div class="row mb-2">
+        @Html.LabelFor(model => model.DataTermino, htmlAttributes: new { @class = "cell-sm-3 cell-md-2" })
+        <div class="cell-sm-9 cell-md-10 no-gap">
+            <div class="cell cell-md-3">
+                @Html.TextBoxFor(model => model.DataTermino, new { data_role = "calendarpicker", data_format = "%d/%m/%Y", data_input_format = "%d/%m/%Y" })
+            </div>
+            @Html.ValidationMessageFor(model => model.DataTermino, "", new { @class = "fg-red" })
+        </div>
+    </div>
+
+    <div class="row mb-2">
+        @Html.LabelFor(model => model.ValorBase, htmlAttributes: new { @class = "cell-sm-3 cell-md-2" })
+        <div class="cell-sm-9 cell-md-10 no-gap">
+            <div class="cell cell-md-3">
+                @Html.EditorFor(model => model.ValorBase, new { })
+            </div>
+            @Html.ValidationMessageFor(model => model.ValorBase, "", new { @class = "fg-red" })
+        </div>
+    </div>
+
+    <div class="row mb-2">
+        @Html.LabelFor(model => model.PrimeiraParcela, htmlAttributes: new { @class = "cell-sm-3 cell-md-2" })
+        <div class="cell-sm-9 cell-md-10 no-gap">
+            <div class="cell cell-md-3">
+                @Html.EditorFor(model => model.PrimeiraParcela, new { })
+            </div>
+            @Html.ValidationMessageFor(model => model.PrimeiraParcela, "", new { @class = "fg-red" })
+        </div>
+    </div>
+
+    <div class="row mb-2">
+        @Html.LabelFor(model => model.DataVencto1Parc, htmlAttributes: new { @class = "cell-sm-3 cell-md-2" })
+        <div class="cell-sm-9 cell-md-10 no-gap">
+            <div class="cell cell-md-3">
+                @Html.TextBoxFor(model => model.DataVencto1Parc, new { data_role = "calendarpicker", data_format = "%d/%m/%Y", data_input_format = "%d/%m/%Y" })
+            </div>
+            @Html.ValidationMessageFor(model => model.DataVencto1Parc, "", new { @class = "fg-red" })
+        </div>
+    </div>
+
+    <div class="row mb-2">
+        @Html.LabelFor(model => model.CondicaoPagamento1ParcIdStr, htmlAttributes: new { @class = "cell-sm-3 cell-md-2" })
+        <div class="cell-sm-9 cell-md-10 no-gap">
+            <div class="cell cell-md-3">
+                @Html.DropDownList("CondicaoPagamento1ParcIdStr", (IEnumerable<SelectListItem>)ViewBag.Formas1Parc)
+            </div>
+            @Html.ValidationMessageFor(model => model.CondicaoPagamento1ParcIdStr, "", new { @class = "fg-red" })
+        </div>
+    </div>
+
+    <div class="row mb-2">
+        @Html.LabelFor(model => model.Tarifas, htmlAttributes: new { @class = "cell-sm-3 cell-md-2" })
+        <div class="cell-sm-9 cell-md-10 no-gap">
+            <div class="cell cell-md-3">
+                @Html.EditorFor(model => model.Tarifas, new { })
+            </div>
+            @Html.ValidationMessageFor(model => model.Tarifas, "", new { @class = "fg-red" })
+        </div>
+    </div>
+
+    <div class="row mb-2">
+        @Html.LabelFor(model => model.Desconto, htmlAttributes: new { @class = "cell-sm-3 cell-md-2" })
+        <div class="cell-sm-9 cell-md-10 no-gap">
+            <div class="cell cell-md-3">
+                @Html.EditorFor(model => model.Desconto, new { })
+            </div>
+            @Html.ValidationMessageFor(model => model.Desconto, "", new { @class = "fg-red" })
+        </div>
+    </div>
+
+    <div class="row mb-2">
+        @Html.LabelFor(model => model.ValorFinal, htmlAttributes: new { @class = "cell-sm-3 cell-md-2" })
+        <div class="cell-sm-9 cell-md-10 no-gap">
+            <div class="cell cell-md-3">
+                @Html.EditorFor(model => model.ValorFinal, new { @readonly = "" })
+            </div>
+            @Html.ValidationMessageFor(model => model.ValorFinal, "", new { @class = "fg-red" })
+        </div>
+    </div>
+
+    <div class="row mb-2">
+        @Html.LabelFor(model => model.Categoria, htmlAttributes: new { @class = "cell-sm-3 cell-md-2" })
+        <div class="cell-sm-9 cell-md-10 no-gap">
+            <div class="cell cell-md-3">
+                @Html.EditorFor(model => model.Categoria)
+            </div>
+            @Html.ValidationMessageFor(model => model.Categoria, "", new { @class = "fg-red" })
+        </div>
+    </div>
+
+    <div class="row mb-2">
+        @Html.LabelFor(model => model.Especie, htmlAttributes: new { @class = "cell-sm-3 cell-md-2" })
+        <div class="cell-sm-9 cell-md-10 no-gap">
+            <div class="cell cell-md-3">
+                @Html.EditorFor(model => model.Especie)
+            </div>
+            @Html.ValidationMessageFor(model => model.Especie, "", new { @class = "fg-red" })
+        </div>
+    </div>
+
+    <div class="row mb-2">
+        @Html.LabelFor(model => model.Descricao, htmlAttributes: new { @class = "cell-sm-3 cell-md-2" })
+        <div class="cell-sm-9 cell-md-10 no-gap">
+            <div class="cell cell-md-3">
+                @Html.TextAreaFor(model => model.Descricao, new { data_role = "textarea" })
+            </div>
+            @Html.ValidationMessageFor(model => model.Descricao, "", new { @class = "fg-red" })
+        </div>
+    </div>
+
+    <div class="row mb-2">
+        @Html.LabelFor(model => model.Observacao, htmlAttributes: new { @class = "cell-sm-3 cell-md-2" })
+        <div class="cell-sm-9 cell-md-10 no-gap">
+            <div class="cell cell-md-3">
+                @Html.TextAreaFor(model => model.Observacao, new { data_role = "textarea" })
+            </div>
+            @Html.ValidationMessageFor(model => model.Observacao, "", new { @class = "fg-red" })
+        </div>
+    </div>
+
+    <div class="row mb-2">
+        <div class="offset-sm-2 cell-sm-9 cell-md-10">
+            <div class="cell cell-sm-3">
+                <button type="submit" class="button primary">Salvar</button>
+                <a class="button link" href="@Url.Action("EmAnalise", "Contratos")">Cancelar</a>
+            </div>
+        </div>
+    </div>
+
+}
+@section styles
+{
+    @Styles.Render("~/content/select2")
+    @Styles.Render("~/content/third-party/select2.css")
+}
+
+@section scripts
+{
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/masked")
+    @Scripts.Render("~/bundles/maskmoney")
+    @Scripts.Render("~/bundles/select2")
+    <script>
+        $(function() {
+            //$("#ValorBase, #Tarifas, #Desconto, #ValorFinal").mask('#.###,00', { reverse: true });
+            $("#ValorBase, #Tarifas, #Desconto, #ValorFinal, #PrimeiraParcela").maskMoney({
+                thousands: '',
+                decimal: ',',
+                allowZero: true
+            });
+
+            $("#ValorBase").maskMoney('mask', $("#ValorBase").val());
+            $("#Tarifas").maskMoney('mask', $("#Tarifas").val());
+            $("#Desconto").maskMoney('mask', $("#Desconto").val());
+            $("#ValorFinal").maskMoney('mask', $("#ValorFinal").val());
+
+            $("#ValorBase, #Tarifas, #Desconto").on('change',
+                function() {
+                    var vb = Number($("#ValorBase").maskMoney('unmasked')[0]);
+                    var tr = Number($("#Tarifas").maskMoney('unmasked')[0]);
+                    var dc = Number($("#Desconto").maskMoney('unmasked')[0]);
+                    $("#ValorFinal").maskMoney('mask', (vb + tr - dc));
+                });
+
+            $("#CondicaoPagamentoIdStr").select2({
+                language: 'pt-BR',
+            });
+
+            var selEmp = $("#Empresa");
+
+            selEmp.select2({
+                language: 'pt-BR',
+                minimumInputLength: 1,
+                ajax: {
+                    url: '@Url.Action("BuscarEmpresas", "Contratos")',
+                    datatype: 'json'
+                }
+            });
+
+            var opt = new Option('@Model.Empresa','@Model.EmpresaId',true, true);
+            selEmp.append(opt).trigger('change');
+
+            var selCli = $("#Cliente");
+            selCli.select2({
+                language: 'pt-BR',
+                minimumInputLength: 1,
+                ajax: {
+                    url: '@Url.Action("BuscarClientes", "Contratos")',
+                    datatype: 'json'
+                }
+            });
+
+            opt = new Option('@Model.Cliente','@Model.ClienteId',true, true);
+            selCli.append(opt).trigger('change');
+
+            var selVnd = $("#Vendedor");
+            selVnd.select2({
+                language: 'pt-BR',
+                minimumInputLength: 1,
+                ajax: {
+                    url: '@Url.Action("BuscarVendedores", "Contratos")',
+                    datatype: 'json'
+                }
+            });
+            opt = new Option('@Model.Vendedor','@Model.VendedorId',true, true);
+            selVnd.append(opt).trigger('change');
+
+            $("#Produto").select2({
+                language: 'pt-BR',
+                minimumInputLength: 1,
+                ajax: {
+                    url: '@Url.Action("BuscarProdutos", "Contratos")',
+                    datatype: 'json'
+                }
+            });
+
+            $("#Produto").on('select2:select',
+                function() {
+                    var sels = $("#Produto").select2('data');
+                    var vlr = 0;
+                    $.each(sels,
+                        function(i, item) {
+                            vlr += Number(item.valor);
+                        });
+                    $("#ValorBase").maskMoney('mask', vlr);
+                });
+
+            $("#Produto").on('select2:unselect',
+                function(e) {
+                    var sels = $("#Produto").select2('data');
+                    var vlr = 0;
+                    $.each(sels,
+                        function(i, item) {
+                            vlr += Number(item.valor);
+                        });
+                    $("#ValorBase").maskMoney('mask', vlr);
+                });
+
+            $("#FormaPagamentoId, #CondicaoPagamentoId").select2();
+
+            var sf = $("#FormaPagamentoId");
+            var sfid = sf.val();
+            populaComboCondicao(sfid);
+
+            $("#FormaPagamentoId").on('select2:select',
+                function() {
+                    var sv = $(this).val();
+                    populaComboCondicao(sv);
+                });
+        });
+
+        function populaComboCondicao(fid) {
+            $("#CondicaoPagamentoId")
+                .html('')
+                .trigger('change');
+
+            $.ajax({
+                url: '@Url.Action("ListarCondicoes", "Contratos")',
+                data: { formaId: fid },
+                dataType: 'json',
+                success: function(data) {
+
+
+                    $.each(data,
+                        function(i, item) {
+                            $("#CondicaoPagamentoId")
+                                .append(new Option(item.text, item.id, false, false)).trigger('change');
+                        });
+
+                    //var sel = $("#CondicaoPagamentoId").data('select');
+                    //sel.data(data);
+                }
+            });
+        }
+    </script>
+}

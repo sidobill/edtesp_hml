@@ -1,0 +1,67 @@
+﻿@using PagedList.Mvc
+@model PagedList.IPagedList<EDTESP.Web.ViewModels.Cadastros.FeriadoViewModel>
+
+@{
+    ViewBag.Title = "Feriados";
+    ViewBag.SubTitle = $"<a class=\"button primary\" href=\"{Url.Action("NovoFeriado","Cadastros")}\">Novo</a>";
+}
+<div class="mb-2">
+    @Html.Partial("_busca")
+</div>
+<div class="">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.FirstOrDefault().FeriadoId)</th>
+                <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Data)</th>
+                <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Descricao)</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        @if (Model.Any())
+        {
+            foreach (var item in Model)
+            {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.FeriadoId)</td>
+                <td>@Html.DisplayFor(modelItem => item.Data)</td>
+                <td>@Html.DisplayFor(modelItem => item.Descricao)</td>
+                <td>
+                    <div class="toolbar">
+                        <a class="tool-button yellow" href="@Url.Action("EditarFeriado", "Cadastros", new {id = item.FeriadoId})">
+                            <span class="mif-pencil"></span>
+                        </a>
+                        <button class="tool-button alert btnRem" data-id="@item.FeriadoId">
+                            <span class="mif-cross"></span>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="3" class="text-center">Sem resultados</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>
+<div class="">
+    @Html.Partial("_Paginacao")
+</div>
+
+@section scripts
+{
+    <script type="text/javascript">
+        $(function() {
+            $(".btnRem").on('click',
+                function() {
+                    var cid = $(this).data('id');
+                    showConfirm('@Url.Action("RemoverFeriado", "Cadastros")', cid);
+                });
+        });
+    </script>
+}

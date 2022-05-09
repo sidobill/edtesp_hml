@@ -1,0 +1,106 @@
+﻿@using EDTESP.Web.Helpers
+@using EDTESP.Web.ViewModels
+@using EDTESP.Web.ViewModels.Cadastros
+@model EDTESP.Web.ViewModels.Cadastros.GrupoUsuarioViewModel
+
+@{
+    ViewBag.Title = "Grupo de Usuários";
+    ViewBag.SubTitle = "Editar Permissões de Grupo de Usuário";
+
+    var grps = (List<Tuple<string,string>>)ViewBag.Grupos;
+    var cats = (List<string>)ViewBag.Categorias;
+    var prms = (List<PermissaoViewModel>) ViewBag.Permissoes;
+
+    var grpprms = (List<PermissaoGrupoUsuarioVewModel>) ViewBag.PermissoesGrupo;
+
+    var i = 1;
+}
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(model => model.GrupoUsuarioId)
+    @Html.EdtespValidationSummary(null, new { @class = "alert alert-danger" })
+
+    <div class="row mb-2">
+        @Html.LabelFor(model => model.GrupoUsuarioId, htmlAttributes: new { @class = "cell-sm-2" })
+        <div class="cell-sm-10 no-gutters">
+            <div class="cell-sm-3">
+                @Html.EditorFor(model => model.Descricao, new { htmlAttributes = new { @readonly = "" } })
+            </div>
+            @Html.ValidationMessageFor(model => model.GrupoUsuarioId, "", new { @class = "fg-red" })
+        </div>
+    </div>
+
+    <div class="row mb-2">
+        <label class="cell-sm-2">Permissões</label>
+        <div class="cell-sm-10">
+            <div class="cell cell-sm-6">
+                <ul class="nav nav-tabs" data-role="tabs" data-expand="true">
+                    @foreach (var cat in cats)
+                    {
+                        <li>
+                            <a href="#cat@(i++)">@cat</a>
+                        </li>
+                    }
+                </ul>
+                <div class="tab-content">
+                    @{ i = 1; }
+                    @foreach (var cat in cats)
+                    {
+                        <div id="cat@(i++)" class="border bd-default no-border-top p-2">
+                            <p>Expanda cada nó para exibir as permissões</p>
+                            <ul data-role="treeview">
+                                @foreach (var grp in grps.Where(x => x.Item1 == cat))
+                                {
+                                    <li data-collapsed="true">
+                                        <input type="checkbox" data-role="checkbox" data-caption="@grp.Item2" title="">
+                                        <ul>
+                                            @foreach (var prm in prms.Where(x => x.Categoria == cat && x.Grupo == grp.Item2))
+                                            {
+                                                <li>
+                                                    <input type="checkbox" name="permissaoId" value="@prm.PermissaoId" data-role="checkbox" data-caption="@prm.Descricao" @(grpprms.Any(x => x.PermissaoId == prm.PermissaoId) ? "checked" : "")>
+                                                </li>
+                                            }
+                                        </ul>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-2">
+        <div class="offset-sm-2 cell-sm-10">
+            <div class="cell">
+                <button type="submit" class="button primary">Salvar</button>
+                <a class="button link" href="@Url.Action("Grupos", "Cadastros")">Cancelar</a>
+            </div>
+        </div>
+    </div>
+
+}
+@section styles
+{
+    <style>
+        .tab-pane {
+            min-height: 150px;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+    </style>
+}
+
+@section scripts
+{
+    @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript">
+        $(function() {
+            $(".nav-tabs li a").first().addClass("active");
+            $(".tab-content > div").first().addClass("active")
+                                           .addClass("show");
+        });
+    </script>
+}

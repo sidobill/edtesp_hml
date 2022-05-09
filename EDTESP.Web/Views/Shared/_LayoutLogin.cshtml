@@ -1,0 +1,26 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EDTESP | @ViewBag.Title</title>
+    @Styles.Render("~/Content/bs4")
+    @Styles.Render("~/Content/fluent")
+    @Styles.Render("~/Content/micon.min.css")
+    @Styles.Render("~/Content/fa")
+    @Styles.Render("~/Content/login.css")
+    @RenderSection("styles", required: false)
+</head>
+<body class="text-center">
+    @RenderBody()
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bs4")
+    @Scripts.Render("~/bundles/mdb")
+    @RenderSection("scripts", required: false)
+    <script type="text/javascript">
+        $(document).ready(function () {
+            
+        });
+    </script>
+</body>
+</html>

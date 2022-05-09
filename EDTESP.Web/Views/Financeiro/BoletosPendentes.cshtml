@@ -1,0 +1,181 @@
+﻿@using System.Collections
+@using EDTESP.Web.Helpers
+@model IEnumerable<EDTESP.Web.ViewModels.Financeiro.BoletoViewModel>
+
+@{
+    ViewBag.Title = "Financeiro";
+    ViewBag.SubTitle = $"Boletos pendentes de envio ao banco";
+}
+<div class="mb-2">
+    @Html.Partial("_busca")
+</div>
+
+@using (Html.BeginForm("GerarCnab", "Financeiro", FormMethod.Post, new { }))
+{
+    @Html.AntiForgeryToken()
+    @Html.EdtespValidationSummary(null, new { @class = "alert alert-danger" })
+    <div class="row">
+        <div class="cell-12">
+            <label for="">Modalidade Geração</label>
+            @Html.DropDownList("modalidadeId", (IEnumerable<SelectListItem>)ViewBag.Parametros, new { data_role = "select", @class = "mb-2" })
+            <button class="button primary mb-2" type="submit">
+                Gerar
+            </button>
+        </div>
+        <div class="cell-12">
+            <div class="toolbar">
+                <button type="button" class="tool-button button bg-green" title="Exportar p/ Excel" onclick="export2Excel(this)">
+                    <span class="mif-file-excel"></span>
+                </button>
+                <button type="button" class="tool-button button bg-gray" title="Exportar p/ PDF" onclick="export2Pdf(this)">
+                    <span class="mif-file-pdf"></span>
+                </button>
+            </div>
+        </div>
+        <div class="cell-12">
+            <table class="table table-hover table-striped table-sm" id="tblBols">
+                <thead>
+                    <tr>
+                        <th>
+
+                        </th>
+                        <th>@Html.DisplayNameFor(model => model.Empresa)</th>
+                        <th>@Html.DisplayNameFor(model => model.DataEmissao)</th>
+                        <th>@Html.DisplayNameFor(model => model.TituloId)</th>
+                        <th>@Html.DisplayNameFor(model => model.Cliente)</th>
+                        <th>@Html.DisplayNameFor(model => model.DataVenctoReal)</th>
+                        <th>@Html.DisplayNameFor(model => model.Valor)</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Any())
+                    {
+                        foreach (var item in Model)
+                        {
+                    <tr>
+                        <td>
+                            <input type="checkbox" data-role="checkbox" name="boletoId" value="@item.BoletoId" checked="checked">
+                        </td>
+                        <td>@Html.DisplayFor(modelItem => item.Empresa)</td>
+                        <td>@Html.DisplayFor(modelItem => item.DataEmissao)</td>
+                        <td>@Html.DisplayFor(modelItem => item.TituloId)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Cliente)</td>
+                        <td>@Html.DisplayFor(modelItem => item.DataVenctoReal)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Valor)</td>
+                        <td>
+                            <div class="toolbar">
+                                <button class="tool-button secondary btnv" type="button" data-id="@item.TituloId" title="Ver">
+                                    <span class="mif-eye"></span>
+                                </button>
+                                <button class="tool-button bg-red btnExc" type="button" data-id="@item.BoletoId" title="Excluir boleto">
+                                    <span class="mif-minus" style="color:white"></span>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="9" class="text-center">Sem resultados</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+
+@section styles
+{
+    @Styles.Render("~/content/dt")
+    @Styles.Render("~/scripts/datatables/buttons/css/buttons.datatables.css")
+}
+
+@section scripts
+{
+    @Scripts.Render("~/scripts/datatables/jszip/jszip.js")
+    @Scripts.Render("~/scripts/datatables/buttons/js/datatables.buttons.js")
+    @Scripts.Render("~/scripts/datatables/pdfmake/pdfmake.js")
+    @Scripts.Render("~/scripts/datatables/pdfmake/vfs_fonts.js")
+    @Scripts.Render("~/scripts/datatables/buttons/js/buttons.html5.js")
+    <script type="text/javascript">
+        var table;
+        $(function() {
+            table = $("#tblBols").DataTable({
+                searching: false,
+                dom: 'frtip',
+                buttons: [
+                    {
+                        extend: 'excelHtml5',
+                        text: 'Exportar p/ Excel',
+                        classname: 'button bg-green'
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        text: 'Exportar p/ PDF',
+                        classname: 'button bg-gray'
+                    },
+                ],
+                language: {
+                    url: '@Url.Content("~/scripts/datatables/datatables.pt-br.json")'
+                }
+            });
+
+            $(".btnv").on('click',
+                function() {
+                    var cid = $(this).data('id');
+                    showDialog('@Url.Action("Ver", "Financeiro")', cid, 'Dados do Título', 'w-50');
+                });
+
+            $(".btnExc").on("click", function () {
+                var bid = $(this).data('id');
+
+                Metro.dialog.create({
+                    title: 'Confirma a acão?',
+                    clsTitle: 'bg-crimson fg-white',
+                    content: 'Tem certeza que deseja excluir?',
+                    actions: [
+                        {
+                            caption: 'Sim',
+                            cls: 'alert js-dialog-close',
+                            onclick: function () {
+                                $.ajax({
+                                    url: '@Url.Action("DeleteTicket", "Financeiro")',
+                                    data: { id: bid },
+                                    type: 'POST',
+                                    dataType: 'JSON',
+                                    success: function (data) {
+                                        if (!data.error) {
+                                            window.location.reload();
+                                        } else {
+                                            showError('Erro', data.msg);
+                                        }
+                                    },
+                                    error: function (x, s, e) {
+                                        showError('Erro', 'Erro ao executar operação');
+                                        console.log(e);
+                                    }
+                                });
+                            }
+                        },
+                        {
+                            caption: 'Não',
+                            cls: 'success js-dialog-close'
+                        }
+                    ]
+                });
+            });
+        });
+
+        function export2Excel() {
+            table.button(0).trigger();
+        }
+
+        function export2Pdf() {
+            table.button(1).trigger();
+        }
+    </script>
+}

@@ -1,0 +1,74 @@
+﻿@using PagedList.Mvc
+@model PagedList.IPagedList<EDTESP.Web.ViewModels.Cadastros.UsuarioViewModel>
+
+@{
+    ViewBag.Title = "Usuários";
+    ViewBag.SubTitle = $"<a class=\"button primary\" href=\"{Url.Action("NovoUsuario","Cadastros")}\">Novo</a>";
+}
+<div class="mb-2">
+    @Html.Partial("_busca")
+</div>
+<div class="">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.FirstOrDefault().UsuarioId)</th>
+                <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Login)</th>
+                <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Nome)</th>
+                <th>@Html.DisplayNameFor(model => model.FirstOrDefault().GrupoUsuario)</th>
+                <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Status)</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        @if (Model.Any())
+        {
+            foreach (var item in Model)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => item.UsuarioId)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Login)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Nome)</td>
+                    <td>@Html.DisplayFor(modelItem => item.GrupoUsuario)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Status)</td>
+                    <td>
+                        <div class="toolbar">
+                            <a class="tool-button yellow" href="@Url.Action("EditarUsuario", "Cadastros", new {id = item.UsuarioId})" title="Editar">
+                                <span class="mif-pencil"></span>
+                            </a>
+                            <a class="tool-button warning" href="@Url.Action("EditarPermissoes", "Cadastros", new {id = item.UsuarioId})" title="Permissões">
+                                <span class="mif-key"></span>
+                            </a>
+                            <button class="tool-button alert btnRem" data-id="@item.UsuarioId" title="Remover">
+                                <span class="mif-cross"></span>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="6" class="text-center">Sem resultados</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>
+<div class="">
+    @Html.Partial("_Paginacao")
+</div>
+
+@section scripts
+{
+    <script type="text/javascript">
+        $(function() {
+            $(".btnRem").on('click',
+                function() {
+                    var cid = $(this).data('id');
+                    showConfirm('@Url.Action("RemoverUsuario", "Cadastros")', cid);
+                });
+        });
+    </script>
+}

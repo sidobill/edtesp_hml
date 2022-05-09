@@ -1,0 +1,35 @@
+﻿@{
+    var p = (int)ViewBag.Pagina;
+    var pp = (int)ViewBag.PorPagina;
+    var termo = (string)ViewBag.Termo;
+    var pgs = (int) ViewBag.Paginas;
+    var total = (int) ViewBag.Total;
+
+    var ctrl = ViewData["controller"]?.ToString();
+    var act = ViewData["action"]?.ToString();
+
+    var emiIni = ((DateTime?) ViewBag.Ini).HasValue ? ((DateTime) ViewBag.Ini).ToString("dd/MM/yyyy") : null;
+    var emiFim = ((DateTime?)ViewBag.Fim).HasValue ? ((DateTime)ViewBag.Fim).ToString("dd/MM/yyyy") : null;
+}
+@if (total > 0)
+{
+    <nav aria-label="Page navigation example">
+        <ul class="pagination no-gap flex-justify-center">
+            <li class="page-item @(p <= 1 ? "disabled" : "")">
+                <a class="page-link" href="@Url.Action(act, ctrl, new {p = p - 1, pp, termo, emiIni, emiFim})">
+                    <i class="fa fa-arrow-left"></i>
+                </a>
+            </li>
+            <li class="page-item disabled">
+                <a class="page-link" href="#">
+                    @p de @pgs
+                </a>
+            </li>
+            <li class="page-item @(p >= pgs ? "disabled" : "")">
+                <a class="page-link" href="@Url.Action(act, ctrl, new {p = p + 1, pp, termo, emiIni, emiFim})">
+                    <i class="fa fa-arrow-right"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+}

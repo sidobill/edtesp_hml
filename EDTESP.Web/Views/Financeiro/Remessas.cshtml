@@ -1,0 +1,56 @@
+﻿@using EDTESP.Web.Helpers
+@using PagedList.Mvc
+@model PagedList.IPagedList<EDTESP.Web.ViewModels.Financeiro.RemessaViewModel>
+
+@{
+    ViewBag.Title = "Financeiro";
+    ViewBag.SubTitle = "Remessas Geradas";
+}
+@*<div class="mb-2">
+    @Html.Partial("_busca")
+</div>*@
+
+<div class="mb-2">
+    <table class="table table-hover table-striped table-sm">
+        <thead>
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.FirstOrDefault().RemessaId)</th>
+                <th>@Html.DisplayNameFor(model => model.FirstOrDefault().DataCriacao)</th>
+                <th>@Html.DisplayNameFor(model => model.FirstOrDefault().ParametroBanco)</th>
+                <th>@Html.DisplayNameFor(model => model.FirstOrDefault().NomeTxt)</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Any())
+            {
+                foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => item.RemessaId)</td>
+                        <td>@Html.DisplayFor(modelItem => item.DataCriacao)</td>
+                        <td>@Html.DisplayFor(modelItem => item.ParametroBanco)</td>
+                        <td>@Html.DisplayFor(modelItem => item.NomeTxt)</td>
+                        <td>
+                            <div class="toolbar">
+                                <a href="@Url.Action("BaixarRemessa","Financeiro", new { remessaId=item.RemessaId})" class="tool-button button dark" title="Baixar" data-id="@item.RemessaId">
+                                    <span class="mif-download"></span>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="9" class="text-center">Sem resultados</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<div class="mb-2">
+    @Html.Partial("_Paginacao")
+</div>
